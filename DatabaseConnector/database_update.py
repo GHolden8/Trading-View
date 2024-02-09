@@ -57,7 +57,7 @@ def update_AV_data(mydb, database_name, func, symbol, interval):
                 )
     mydb.commit()
 
-# Main function
+# Main function - FOr testing purposes
 if(__name__ == "__main__"):
     # Get the connection info
     coninfo = open("./config/db_info.cfg", 'r')
