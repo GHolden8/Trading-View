@@ -19,7 +19,7 @@ def write_json(data, filename):
             for row in data:
                 f.write(str(row) + '\n')
 
-# Main function
+# Main function - For testing purposes
 if(__name__ == "__main__"):
     # Get the connection info
     coninfo = open("../config/db_info.cfg", 'r')
