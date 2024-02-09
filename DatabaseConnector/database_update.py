@@ -33,11 +33,28 @@ def update_AV_data(mydb, database_name, func, symbol, interval):
         exit(1)
     data = response.json()
 
+    # Get the ID from the symbol
+    symbolID = mycursor.SELECT(f"SELECT tickerid FROM tracked_tickers WHERE ticker = '{symbol}'")
+
     # Update the database
     for key in data:
         if(key != "Meta Data"):
             for date in data[key]:
-                mycursor.execute("INSERT INTO ticker_dataset VALUES ( "+ symbol + "," + date + "," + interval + "," + data[key][date]["1. open"] + "," + data[key][date]["2. high"] + "," + data[key][date]["3. low"] + "," + data[key][date]["4. close"] + ") ON DUPLICATE KEY UPDATE")
+                open_ = round(float(data[key][date]["1. open"]), 2)
+                high = round(float(data[key][date]["2. high"]), 2)
+                low = round(float(data[key][date]["3. low"]), 2)
+                close = round(float(data[key][date]["4. close"]), 2)
+                #print(
+                #    f"""
+                #    INSERT INTO ticker_dataset
+                #    VALUES ("{symbol}","{date}",{interval},{open_},{high},{low},{close})
+                #    """)
+                mycursor.execute(
+                    f"""
+                    INSERT INTO ticker_dataset
+                    VALUES ("{symbol}","{date}",{interval},{open_},{high},{low},{close})
+                    ON DUPLICATE KEY UPDATE"""
+                )
     mydb.commit()
 
 # Main function
@@ -61,4 +78,4 @@ if(__name__ == "__main__"):
         exit(1)
 
     # Update the data
-    update_AV_data(mydb, "stocktracker", "TIME_SERIES_INTRADAY", "IBM", "5min")
+    update_AV_data(mydb, "stocktracker", "TIME_SERIES_INTRADAY", "IBM", "5")
