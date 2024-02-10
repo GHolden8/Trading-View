@@ -2,6 +2,7 @@
 from errno import errorcode
 from database_utils import connect
 import mysql.connector
+import json
 import os
 
 # Fetch the data from the database
@@ -16,8 +17,15 @@ def fetch_data(mydb, database_name, table, columns):
 def write_json(data, filename):
     with open(filename,
                 'w') as f:
+            result = {}
             for row in data:
-                f.write(str(row) + '\n')
+                temp = {}
+                for i, col in enumerate(row):
+                    temp[i] = col
+                result.append(temp)
+            json_result = json.dumps(result)
+            f.write(json_result)
+
 
 # Main function - For testing purposes
 if(__name__ == "__main__"):

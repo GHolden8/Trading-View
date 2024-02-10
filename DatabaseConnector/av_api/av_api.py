@@ -4,7 +4,7 @@ import json
 from av_api_exceptions import InvalidFunctionException, InvalidIntervalException
 
 CONFIGS = None
-config_file = open("config.json")
+config_file = open("api_config.json")
 CONFIGS = json.load(config_file)
 config_file.close()
 
