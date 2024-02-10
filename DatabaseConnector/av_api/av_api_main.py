@@ -1,10 +1,13 @@
 import requests
 import json
+import os
 
-from av_api_exceptions import InvalidFunctionException, InvalidIntervalException
+from av_api.av_api_exceptions import InvalidFunctionException, InvalidIntervalException
 
 CONFIGS = None
-config_file = open("api_config.json")
+current_dir = os.path.dirname(__file__)
+config_path = os.path.join(current_dir, "api_config.json")
+config_file = open(config_path)
 CONFIGS = json.load(config_file)
 config_file.close()
 
@@ -17,7 +20,7 @@ API_KEY = CONFIGS['av_api_keys'][0]
 def get_series(function, symbol, interval):
     # Fetch the JSON data from the AV API
     
-    url = f"ENDPOINT/query?function={function}&symbol={symbol}&interval={interval}&apikey={API_KEY}"
+    url = f"{ENDPOINT}/query?function={function}&symbol={symbol}&interval={interval}&apikey={API_KEY}"
     
     try:
         response = requests.get(url)

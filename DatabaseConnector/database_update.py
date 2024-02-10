@@ -1,28 +1,31 @@
 #Imports
 from errno import errorcode
-from database_utils import connect
-import mysql.connector
 import os
 import random
 import requests
-
 import json
 
-from av_api.av_api import *
+import mysql.connector
+
+from av_api.av_api_main import *
 from mysql_connect import MySQLConnect
 
 # Memory safe DB config file import
 DB_CONFIGS = None
-config_file = open("db_config.json")
+current_dir = os.path.dirname(__file__)
+config_path = os.path.join(current_dir, "db_config.json")
+config_file = open(config_path)
 
 # database interface object
-dbi = MySQLConnect(config_file)
+dbi = MySQLConnect(config_path)
 
 DB_CONFIGS = json.load(config_file)
 config_file.close()
 
 AV_CONFIGS = None
-config_file = open("av_api/config.json")
+current_dir = os.path.dirname(__file__)
+config_path = os.path.join(current_dir, "av_api/api_config.json")
+config_file = open(config_path)
 AV_CONFIGS = json.load(config_file)
 config_file.close()
 
@@ -59,8 +62,10 @@ def update_AV_data(func, symbol, interval):
         # ticker exists in tracked ticker table, assign ticker_id
         tickerid = db_out[0][0]
 
+    datareturn = False
     for key in api_data:
         if(key != "Meta Data"):
+            datareturn = True
             for date in api_data[key]:
                 open_ = round(float(api_data[key][date]["1. open"]), 2)
                 high = round(float(api_data[key][date]["2. high"]), 2)
@@ -78,15 +83,15 @@ def update_AV_data(func, symbol, interval):
                         {high},
                         {low},
                         {close}
-                    )
-                    ON DUPLICATE KEY UPDATE
+                    ) ON DUPLICATE KEY UPDATE tickerid = tickerid
                 """
                 dbi.sql_execute(insert)
 
-        else:
-            print("API Failure. No Data Returned.")
-            print(api_data)
-            exit(1)
+        
+    if(not datareturn):
+        print("API Failure. No Data Returned.")
+        print(api_data)
+        exit(1)
 
     # ======================================================================== 
 

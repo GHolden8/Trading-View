@@ -7,21 +7,24 @@ import os
 
 # Memory safe DB config file import
 DB_CONFIGS = None
-config_file = open("db_config.json")
+current_dir = os.path.dirname(__file__)
+config_path = os.path.join(current_dir, "db_config.json")
+config_file = open(config_path)
 
 # database interface object
-dbi = MySQLConnect(config_file)
+dbi = MySQLConnect(config_path)
 
 DB_CONFIGS = json.load(config_file)
 config_file.close()
 
 # Fetch the data from the database
-def fetch_data(mydb, database_name, table, columns):
-    mycursor = mydb.cursor()
-    mycursor.execute("USE " + database_name)
-    mycursor.execute("SELECT " + columns + " FROM " + table)
-    myresult = mycursor.fetchall()
-    return myresult
+def fetch_data():
+    query = f"""
+                SELECT *
+                FROM ticker_dataset
+            """
+    db_out = dbi.sql_select(query)
+    return db_out
 
 # Write data into a JSON file
 def write_json(data, filename):
@@ -40,7 +43,7 @@ def write_json(data, filename):
 # Main function - For testing purposes
 if(__name__ == "__main__"):
     # Fetch the data
-    data = fetch_data(mydb, "main", "ticker_dataset", "*")
+    data = fetch_data()
 
     # Store old JSON data
     os.remove("ticker_data_old.json")
