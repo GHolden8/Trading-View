@@ -24,13 +24,13 @@ class MySQLConnect:
         json_configs.close()
         
         # loading configs
-        self.host = self.configs['mysql']['host']
-        self.user = self.configs['mysql']['user']
-        self.password = self.configs['mysql']['password']
+        self.host = self.configs['hostname']
+        self.user = self.configs['username']
+        self.password = self.configs['password']
         if self.password.lower() == 'prompt':
             self.password = input('Please enter DB Password: ')
-        self.database = self.configs['mysql']['database']
-        self.double_quote_escape = self.configs['mysql']['double_quote_escape']
+        self.database = self.configs['schema']
+        self.double_quote_escape = self.configs['double_quote_escape']
 
     def sql_execute(self, query):
         """
@@ -51,7 +51,8 @@ class MySQLConnect:
                     connection.commit()
         except Error as e:
             print("/!\\ ERROR /!\\")
-            print(e, e.with_traceback())
+            print(e, e.with_traceback(None))
+            print("Query: ", query)
             exit("Database Error. Program crashed. Exiting.")
 
     def sql_select(self, query):
