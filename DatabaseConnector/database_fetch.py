@@ -1,9 +1,19 @@
 #Imports
 from errno import errorcode
-from database_utils import connect
+from mysql_connect import MySQLConnect
 import mysql.connector
 import json
 import os
+
+# Memory safe DB config file import
+DB_CONFIGS = None
+config_file = open("db_config.json")
+
+# database interface object
+dbi = MySQLConnect(config_file)
+
+DB_CONFIGS = json.load(config_file)
+config_file.close()
 
 # Fetch the data from the database
 def fetch_data(mydb, database_name, table, columns):
@@ -29,21 +39,6 @@ def write_json(data, filename):
 
 # Main function - For testing purposes
 if(__name__ == "__main__"):
-    # Get the connection info
-    coninfo = open("../config/db_info.cfg", 'r')
-    coninfo.readline()
-    hostname = coninfo.readline().strip()
-    user = coninfo.readline().strip()
-    password = coninfo.readline().strip()
-
-    # Connect to the database
-    mydb = connect(hostname, user, password)
-
-    # Error checking
-    if(isinstance(mydb, str)):
-        print(mydb)
-        exit(1)
-
     # Fetch the data
     data = fetch_data(mydb, "main", "ticker_dataset", "*")
 
