@@ -1,0 +1,4 @@
+# File format: hostname, user, password. Make sure they're in this order and on seperate lines
+localhost
+root
+root
