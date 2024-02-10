@@ -59,7 +59,7 @@ def update_AV_data(mydb, database_name, func, symbol, interval):
                 mycursor.execute(
                     f"""
                     INSERT INTO ticker_dataset
-                    VALUES ("{tickerid}","{date}",{interval},{open_},{high},{low},{close})
+                    VALUES ("{tickerid}","{date}",{int(interval)},{open_},{high},{low},{close})
                     ON DUPLICATE KEY UPDATE"""
                 )
     mydb.commit()
