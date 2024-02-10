@@ -34,7 +34,14 @@ def update_AV_data(mydb, database_name, func, symbol, interval):
     data = response.json()
 
     # Get the ID from the symbol
-    symbolID = mycursor.SELECT(f"SELECT tickerid FROM tracked_tickers WHERE ticker = '{symbol}'")
+    mycursor.execute(f"SELECT tickerid FROM tracked_tickers WHERE ticker = '{symbol}'")
+    tickerid = mycursor.fetchall()
+    tickerid = tickerid[0][0]
+
+    if(not tickerid):
+        mycursor.execute(f"INSERT INTO tracked_tickers VALUES ('{symbol}')")
+        mycursor.execute(f"SELECT tickerid FROM tracked_tickers WHERE ticker = '{symbol}'")
+        tickerid = mycursor.fetchall()
 
     # Update the database
     for key in data:
@@ -52,7 +59,7 @@ def update_AV_data(mydb, database_name, func, symbol, interval):
                 mycursor.execute(
                     f"""
                     INSERT INTO ticker_dataset
-                    VALUES ("{symbol}","{date}",{interval},{open_},{high},{low},{close})
+                    VALUES ("{tickerid}","{date}",{interval},{open_},{high},{low},{close})
                     ON DUPLICATE KEY UPDATE"""
                 )
     mydb.commit()
