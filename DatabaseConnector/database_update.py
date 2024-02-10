@@ -42,7 +42,10 @@ def insert_ticker(ticker):
 # Output: None
 # Exceptions thrown: RequestsException
 def update_AV_data(func, symbol, interval):
-
+    if(not validate_function(func)):
+        raise InvalidFunctionException(f"{func} is not a valid function. Valid functions are: TIME_SERIES_INTRADAY, TIME_SERIES_DAILY, TIME_SERIES_DAILY_ADJUSTED.")
+    if(not validate_interval(interval)):
+        raise InvalidIntervalException(f"{interval} is not a valid time interval. Valid intervals are: 1min, 5min, 15min, 30min, 60min, daily, weekly, monthly.")
     api_data = get_series(func, symbol, interval)
 
     query = f"""
@@ -78,7 +81,7 @@ def update_AV_data(func, symbol, interval):
                     VALUES (
                         "{tickerid}",
                         "{date}",
-                        {int(interval)},
+                        {interval},
                         {open_},
                         {high},
                         {low},
