@@ -1,0 +1,3 @@
+config/db_info.cfg
+config/av_keys.cfg
+DatabaseConnector/__pycache__/*
