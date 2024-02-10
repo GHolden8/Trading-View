@@ -1,0 +1,7 @@
+{
+    "api_endpoint": "https://www.alphavantage.co",
+    "av_api_keys": [
+        "ZFH8GYRZVTGCPCIV",
+        "demo"
+    ]
+}
