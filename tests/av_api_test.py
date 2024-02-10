@@ -4,7 +4,9 @@ import unittest
 
 # Grab our API key from secrets
 try:
+    # OS environ not conducive to cross-platform dev, lets change this to a config. Private Repo
     API_KEY = os.environ['TEST_API_KEY_AV']
+
 except:
     API_KEY = "demo"
 
