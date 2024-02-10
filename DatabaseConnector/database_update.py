@@ -93,23 +93,6 @@ def update_AV_data(func, symbol, interval):
 
 # Main function - FOr testing purposes
 if __name__ == "__main__":
-    # Get the connection info
-    coninfo = open("./config/db_info.cfg", 'r')
-
-    info = []
-    for candidate in coninfo:
-        candidate = candidate.strip()
-        if(candidate.startswith("#")):
-            continue
-        info.append(candidate)
-
-    # Connect to the database
-    mydb = connect(info[0], info[1], info[2])
-
-    # Error checking
-    if(isinstance(mydb, str)):
-        print(mydb)
-        exit(1)
 
     # Update the data
-    update_AV_data(mydb, "stocktracker", "TIME_SERIES_INTRADAY", "IBM", "5")
+    update_AV_data("TIME_SERIES_INTRADAY", "IBM", "5")
