@@ -36,7 +36,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `stocktracker`.`ticker_dataset` (
   `tickerid` INT(10) NOT NULL,
   `timestamp` DATETIME NOT NULL,
-  `interval` INT NOT NULL,
+  `interval` ENUM('1min', '5min', '15min', '30min', '60min', 'daily', 'weekly', 'monthly') NOT NULL,
   `open` DECIMAL(10,2) UNSIGNED NOT NULL,
   `high` DECIMAL(10,2) UNSIGNED NOT NULL,
   `low` DECIMAL(10,2) UNSIGNED NOT NULL,
