@@ -38,7 +38,7 @@ def insert_ticker(ticker):
     dbi.sql_execute(insert)
 
 # Alphavantage update function
-# Input: mydb, database_name, func, symbol, interval
+# Input: func, symbol, interval
 # Output: None
 # Exceptions thrown: RequestsException
 def update_AV_data(func, symbol, interval):
@@ -75,13 +75,13 @@ def update_AV_data(func, symbol, interval):
                 low = round(float(api_data[key][date]["3. low"]), 2)
                 close = round(float(api_data[key][date]["4. close"]), 2)
 
-                # /!\ WARNING: QUERY DOES NOT ACCOUNT FOR INTERVAL /!\
+                # /!\ WARNING: QUERY DOES NOT ACCOUNT FOR ENUM INTERVAL /!\
                 insert = f"""
                     INSERT INTO ticker_dataset
                     VALUES (
                         "{tickerid}",
                         "{date}",
-                        {interval},
+                        "{interval}",
                         {open_},
                         {high},
                         {low},
