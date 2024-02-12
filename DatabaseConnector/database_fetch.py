@@ -35,6 +35,7 @@ def write_json(data, filename):
     with open(filename,
                 'w') as f:
             result = {}
+            index = 0
             for row in data:
                 temp = {}
                 for i, col in enumerate(row):
@@ -46,8 +47,9 @@ def write_json(data, filename):
                         else:
                             temp[i] = col
                         
-                result[row] = temp
-            json_result = json.dumps(result)
+                result[index] = temp
+                index += 1
+            json_result = json.dumps(result, indent = 4)
             f.write(json_result)
 
 
