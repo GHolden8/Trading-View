@@ -47,7 +47,7 @@ def write_json(data, filename):
                             temp[i] = col
                         
                 result[row] = temp
-            json_result = json.dumps(result)
+            json_result = json.dumps(result, indent=1)
             f.write(json_result)
 
 
