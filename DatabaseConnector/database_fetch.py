@@ -1,9 +1,13 @@
 #Imports
+import datetime
+from decimal import Decimal
 from errno import errorcode
+import os
+
 from mysql_connect import MySQLConnect
+
 import mysql.connector
 import json
-import os
 
 # Memory safe DB config file import
 DB_CONFIGS = None
@@ -34,8 +38,15 @@ def write_json(data, filename):
             for row in data:
                 temp = {}
                 for i, col in enumerate(row):
-                    temp[i] = col
-                result.append(temp)
+                    if(isinstance(col, datetime.datetime)):
+                        temp[i] = col.strftime("%Y-%m-%d %H:%M:%S")
+                    else:
+                        if(isinstance(col, Decimal)):
+                            temp[i] = float(col)
+                        else:
+                            temp[i] = col
+                        
+                result[row] = temp
             json_result = json.dumps(result)
             f.write(json_result)
 
@@ -46,8 +57,10 @@ if(__name__ == "__main__"):
     data = fetch_data()
 
     # Store old JSON data
-    os.remove("ticker_data_old.json")
-    os.rename("ticker_data.json", "ticker_data_old.json")
+    if(os.path.exists("ticker_data.json")):
+        if(os.path.exists("ticker_data_old.json")):
+            os.remove("ticker_data_old.json")
+        os.rename("ticker_data.json", "ticker_data_old.json")
     
     # Write the data into a JSON file
     write_json(data, "ticker_data.json")
