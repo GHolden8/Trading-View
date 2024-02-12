@@ -33,7 +33,7 @@ def validate_function(function):
     "Alpha vantage API Function validation function"
     valid_functions = [
         "TIME_SERIES_INTRADAY",
-        "TUNE_SERIES_DAILY",
+        "TIME_SERIES_DAILY",
         "TIME_SERIES_DAILY_ADJUSTED"
     ]
     if function not in valid_functions:
