@@ -32,7 +32,7 @@ config_file.close()
 def insert_ticker(ticker):
     insert = f"""
         INSERT INTO tracked_tickers
-        `ticker` VALUES ("{ticker}")
+        VALUES ("{ticker}", NULL)
         ;
     """
     dbi.sql_execute(insert)
@@ -42,10 +42,11 @@ def insert_ticker(ticker):
 # Output: None
 # Exceptions thrown: RequestsException
 def update_AV_data(func, symbol, interval):
-    if(not validate_function(func)):
-        raise InvalidFunctionException(f"{func} is not a valid function. Valid functions are: TIME_SERIES_INTRADAY, TIME_SERIES_DAILY, TIME_SERIES_DAILY_ADJUSTED.")
-    if(not validate_interval(interval)):
-        raise InvalidIntervalException(f"{interval} is not a valid time interval. Valid intervals are: 1min, 5min, 15min, 30min, 60min, daily, weekly, monthly.")
+    # Check our func/interval
+    validate_function(func)
+    validate_interval(interval)
+
+    # Fetch the JSON data from the AV API
     api_data = get_series(func, symbol, interval)
 
     query = f"""
@@ -81,7 +82,7 @@ def update_AV_data(func, symbol, interval):
                     VALUES (
                         "{tickerid}",
                         "{date}",
-                        {interval},
+                        "{interval}",
                         {open_},
                         {high},
                         {low},
@@ -103,4 +104,4 @@ def update_AV_data(func, symbol, interval):
 if __name__ == "__main__":
 
     # Update the data
-    update_AV_data("TIME_SERIES_INTRADAY", "IBM", "5")
+    update_AV_data("TIME_SERIES_INTRADAY", "IBM", "5min")
