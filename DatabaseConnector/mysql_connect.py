@@ -51,7 +51,7 @@ class MySQLConnect:
                     connection.commit()
         except Error as e:
             print("/!\\ ERROR /!\\")
-            print(e, e.with_traceback(None))
+            print(e, e.__traceback__)
             print("Query: ", query)
             exit("Database Error. Program crashed. Exiting.")
 
@@ -77,6 +77,6 @@ class MySQLConnect:
 
         except Error as e:
             print("/!\\ ERROR /!\\")
-            print(e.with_traceback())
+            print(e.__traceback__)
             exit("Database Error. Program crashed. Exiting.")
         
