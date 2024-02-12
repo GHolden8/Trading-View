@@ -24,6 +24,7 @@ USE `stocktracker` ;
 CREATE TABLE IF NOT EXISTS `stocktracker`.`tracked_tickers` (
   `ticker` CHAR(5) NOT NULL,
   `tickerid` INT(10) NOT NULL AUTO_INCREMENT,
+  `is_favorite` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`tickerid`),
   UNIQUE INDEX `ticker_UNIQUE` (`ticker` ASC) VISIBLE,
   UNIQUE INDEX `tickerid_UNIQUE` (`tickerid` ASC) VISIBLE)
