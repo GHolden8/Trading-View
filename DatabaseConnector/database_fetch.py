@@ -7,6 +7,7 @@ import os
 from mysql_connect import MySQLConnect
 
 import mysql.connector
+from database_utils import *
 import json
 
 # Memory safe DB config file import
@@ -26,6 +27,29 @@ def fetch_data():
     query = f"""
                 SELECT *
                 FROM ticker_dataset
+            """
+    db_out = dbi.sql_select(query)
+    return db_out
+
+def fetch_tickers():
+    query = f"""
+                SELECT DISTINCT ticker
+                FROM ticker_dataset
+            """
+    db_out = dbi.sql_select(query)
+    return db_out
+
+def fetch_data_by_ticker(symbol):
+    # Get our ticker index
+    ticker = get_tickerid_by_symbol(symbol)
+    if(ticker is None):
+        return None
+
+    # Get our data for the ticker
+    query = f"""
+                SELECT *
+                FROM ticker_dataset
+                WHERE tickerid = '{ticker}'
             """
     db_out = dbi.sql_select(query)
     return db_out
