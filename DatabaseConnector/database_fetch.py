@@ -80,7 +80,7 @@ def write_json(data, filename):
 # Main function - For testing purposes
 if(__name__ == "__main__"):
     # Fetch the data
-    data = fetch_data()
+    data = fetch_data_by_ticker("IBM")
 
     # Store old JSON data
     if(os.path.exists("ticker_data.json")):
