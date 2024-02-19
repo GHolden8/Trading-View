@@ -37,8 +37,8 @@ def retrieve_data(asset, start_epoch, end_epoch, interval):
         "User-Agent": "Special Agent Open Sesame 1.69"
     }
 
-    start_epoch = modtime(start_epoch)
-    end_epoch = modtime(end_epoch)
+    start_epoch = modtime(start_epoch, interval)
+    end_epoch = modtime(end_epoch, interval)
 
     # setting interval to Yahoo Finance Applicable intervals
     interval = INTERVALS.get(interval)
@@ -48,7 +48,34 @@ def retrieve_data(asset, start_epoch, end_epoch, interval):
     
     # print(uri)
 
-    return requests.get(uri, headers=headers).text
+    data = requests.get(uri, headers=headers).text
+
+    formatted_data = []
+    # skips column line
+    for line in data.split('\n')[1:]:
+        line_cols = line.split(',')
+        formatted_data.append(
+            {
+                "date": line_cols[0],
+                "open": line_cols[1],
+                "high": line_cols[2],
+                "low": line_cols[3],
+                "close": line_cols[4]
+            }
+        )
+    return formatted_data
+
 
 if __name__ == "__main__":
-    retrieve_data("AAPL", 1707696000, 1707955200, "daily")
+    # fortune 500 tickers
+    # WMT -- walmart
+    # AMZN -- amazon
+    # XOM -- exxon
+    # AAPL -- Apple
+
+
+    for x in retrieve_data("AAPL", 1707696000, 1707955200, "daily"):
+        print(x)
+    # retrieve_data("WMT", 1707696000, 1707955200, "daily")
+    # retrieve_data("AMZN", 1707696000, 1707955200, "daily")
+    # retrieve_data("XOM", 1707696000, 1707955200, "daily")
