@@ -7,10 +7,15 @@ app = Flask(__name__)
 def root():
     return "Hello I am a server, pass me the flask."
 
-@app.route('/<symbol:string>/<interval:string>')
+@app.route('/<string:symbol>/<string:interval>')
 def get_data(symbol, interval):
     data = get_tickers(symbol, interval)
-    print(data)
+
+    formatted_data = []
+    for x in data:
+        formatted_data.append(
+            list(x)
+        )
 
     response = {
         'symbol': symbol,

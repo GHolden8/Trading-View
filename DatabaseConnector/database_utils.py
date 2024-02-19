@@ -46,8 +46,8 @@ def insert_ticker(ticker):
 def get_tickers(symbol, interval):
     ''' Returns a symbol ticker dataset at a particular interval. Must be valid interval'''
     query = f"""
-    SELECT td.timestamp,
-        td.interval
+    SELECT td.`timestamp`,
+        td.`interval`,
         td.open,
         td.high,
         td.low,
