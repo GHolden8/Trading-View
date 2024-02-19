@@ -1,5 +1,7 @@
 import requests
-import yahooException
+import datetime
+
+from yahoo_finance import yahooException
 # dissecting the request for CSV tabular output is the following:
 # the request is rather simple...
 ENDPOINT = "https://query1.finance.yahoo.com/v7/finance/download"
@@ -54,9 +56,10 @@ def retrieve_data(asset, start_epoch, end_epoch, interval):
     # skips column line
     for line in data.split('\n')[1:]:
         line_cols = line.split(',')
+        print(line)
         formatted_data.append(
             {
-                "date": line_cols[0],
+                "date": datetime.datetime.strptime(line_cols[0], '%Y-%m-%d'),
                 "open": line_cols[1],
                 "high": line_cols[2],
                 "low": line_cols[3],

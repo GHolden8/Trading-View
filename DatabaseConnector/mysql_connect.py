@@ -77,6 +77,6 @@ class MySQLConnect:
 
         except Error as e:
             print("/!\\ ERROR /!\\")
-            print(e.__traceback__)
+            print(e, e.__traceback__)
             exit("Database Error. Program crashed. Exiting.")
         
