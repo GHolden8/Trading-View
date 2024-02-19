@@ -1,7 +1,7 @@
 {
     "schema": "stocktracker",
     "hostname": "127.0.0.1",
-    "username": "root",
+    "username": "toor",
     "password": "root",
     "port": 3306,
     "double_quote_escape": ""

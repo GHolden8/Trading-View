@@ -21,8 +21,8 @@ dbi = MySQLConnect(config_path)
 DB_CONFIGS = json.load(config_file)
 config_file.close()
 
-# Converts a ticker symbol to a ticker id
 def get_tickerid_by_symbol(symbol):
+    """Converts a ticker symbol to a ticker id"""
     query = f"""
         SELECT tickerid
         FROM tracked_tickers
@@ -34,11 +34,30 @@ def get_tickerid_by_symbol(symbol):
         return None
     return db_out[0][0]
 
-# Inserts a ticker into the tracked_tickers table
 def insert_ticker(ticker):
+    '''Inserts a ticker into the tracked_tickers table'''
     insert = f"""
         INSERT INTO tracked_tickers
         VALUES ("{ticker}", NULL, 0)
         ;
     """
     dbi.sql_execute(insert)
+
+def get_tickers(symbol, interval):
+    ''' Returns a symbol ticker dataset at a particular interval. Must be valid interval'''
+    query = f"""
+    SELECT td.timestamp,
+        td.interval
+        td.open,
+        td.high,
+        td.low,
+        td.close
+    FROM tracked_tickers tt
+    JOIN ticker_dataset AS td
+        ON td.tickerid = tt.tickerid
+    WHERE tt.ticker = '{symbol}' AND td.interval = '{interval}'
+    """
+    db_out = dbi.sql_select(query)
+    if len(db_out) == 0:
+        return None
+    return db_out
