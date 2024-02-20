@@ -56,6 +56,7 @@ def get_tickers(symbol, interval):
     JOIN ticker_dataset AS td
         ON td.tickerid = tt.tickerid
     WHERE tt.ticker = '{symbol}' AND td.interval = '{interval}'
+    ORDER BY td.`timestamp` ASC
     """
     db_out = dbi.sql_select(query)
     if len(db_out) == 0:
