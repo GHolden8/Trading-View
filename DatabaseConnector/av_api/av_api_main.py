@@ -2,6 +2,8 @@ import requests
 import json
 import os
 
+from alpha_vantage.timeseries import TimeSeries
+
 from av_api.av_api_exceptions import InvalidFunctionException, InvalidIntervalException
 
 CONFIGS = None
@@ -17,17 +19,48 @@ API_KEY = CONFIGS['av_api_keys'][0]
 
 
 
-def get_series(function, symbol, interval):
-    # Fetch the JSON data from the AV API
-    
-    url = f"{ENDPOINT}/query?function={function}&symbol={symbol}&interval={interval}&apikey={API_KEY}"
-    
+def get_series(function, symbol, interval, api_key, full=False):
+    '''This function will return a dictionary of time series data for the specified symbol and time interval.'''
+    ts = TimeSeries(key=api_key, output_format='json')
+
     try:
-        response = requests.get(url)
-    except requests.exceptions.RequestException as e:
+        # Get time series data based on function, symbol, and interval
+        if function == 'TIME_SERIES_INTRADAY':
+            data, _ = ts.get_intraday(symbol=symbol, interval=interval, outputsize='full' if full else 'compact')
+        elif function == 'TIME_SERIES_DAILY':
+            data, _ = ts.get_daily(symbol=symbol, outputsize='full' if full else 'compact')
+        elif function == 'TIME_SERIES_WEEKLY':
+            data, _ = ts.get_weekly(symbol=symbol, outputsize='full' if full else 'compact')
+        elif function == 'TIME_SERIES_MONTHLY':
+            data, _ = ts.get_monthly(symbol=symbol, outputsize='full' if full else 'compact')
+        else:
+            raise ValueError("Invalid function provided")
+        
+        return data
+
+    except Exception as e:
         print(e)
         exit(1)
-    return response.json()
+
+def get_time_series(function, symbol, interval, start_date, end_date, api_key):
+    '''This function will return a dictionary of time series data for the specified symbol and time period. 
+        The time series data will be filtered based on the specified time interval.'''
+
+    try:
+        # Get time series data within the specified time period
+        data = get_series(function, symbol, interval, api_key, True)
+        
+        # Filter data within the specified time period
+        filtered_data = {}
+        for date, values in data.items():
+            if start_date <= date <= end_date:
+                filtered_data[date] = values
+        
+        return filtered_data
+
+    except Exception as e:
+        print(e)
+        exit(1)
 
 def validate_function(function):
     "Alpha vantage API Function validation function"
