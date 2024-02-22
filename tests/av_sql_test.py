@@ -14,7 +14,7 @@ except:
 
 class av_api_test(unittest.TestCase):
     def test_api_fetch(self):
-        response = get_time_series('TIME_SERIES_INTRADAY', 'AAPL', '5min', '2021-01-01', '2021-01-02', API_KEY)
+        response = get_time_series('TIME_SERIES_DAILY', 'AAPL', None, '2023-01-03', '2023-01-05', '2023-01', API_KEY)
         test_data = json.load(open('av_test_data.json', 'r'))
         self.assertEqual(test_data, response)
 

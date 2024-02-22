@@ -4,7 +4,7 @@ import os
 
 from alpha_vantage.timeseries import TimeSeries
 
-from av_api.av_api_exceptions import InvalidFunctionException, InvalidIntervalException
+from av_api_exceptions import InvalidFunctionException, InvalidIntervalException
 
 CONFIGS = None
 current_dir = os.path.dirname(__file__)
@@ -19,14 +19,14 @@ API_KEY = CONFIGS['av_api_keys'][0]
 
 
 
-def get_series(function, symbol, interval, api_key, full=False):
+def get_series(function, symbol, interval, api_key, month = None, full=False):
     '''This function will return a dictionary of time series data for the specified symbol and time interval.'''
     ts = TimeSeries(key=api_key, output_format='json')
 
     try:
         # Get time series data based on function, symbol, and interval
         if function == 'TIME_SERIES_INTRADAY':
-            data, _ = ts.get_intraday(symbol=symbol, interval=interval, outputsize='full' if full else 'compact')
+            data, _ = ts.get_intraday(symbol=symbol, interval=interval, month = month, outputsize='full' if full else 'compact')
         elif function == 'TIME_SERIES_DAILY':
             data, _ = ts.get_daily(symbol=symbol, outputsize='full' if full else 'compact')
         elif function == 'TIME_SERIES_WEEKLY':
@@ -38,17 +38,17 @@ def get_series(function, symbol, interval, api_key, full=False):
         
         return data
 
-    except Exception as e:
+    except ValueError as e:
         print(e)
         exit(1)
 
-def get_time_series(function, symbol, interval, start_date, end_date, api_key):
+def get_time_series(function, symbol, interval, start_date, end_date, month, api_key):
     '''This function will return a dictionary of time series data for the specified symbol and time period. 
         The time series data will be filtered based on the specified time interval.'''
 
     try:
         # Get time series data within the specified time period
-        data = get_series(function, symbol, interval, api_key, True)
+        data = get_series(function, symbol, interval, api_key, month, True)
         
         # Filter data within the specified time period
         filtered_data = {}
@@ -85,3 +85,9 @@ def validate_interval(interval):
     ]
     if interval not in intervals:
         raise InvalidIntervalException(f"{interval} is not a valid time interval.")
+    
+# Testing stuff
+if __name__ == "__main__":
+    response = get_time_series('TIME_SERIES_DAILY', 'AAPL', None, '2023-01-03', '2023-01-05', '2023-01', API_KEY)
+    with open("av_test_data.json", "w") as file:
+        json.dump(response, file, ensure_ascii=False, indent=4)
