@@ -1,9 +1,12 @@
+'''This module runs the fetching unit test. It tests the get_tickers function from the database_utils module.'''
+
 import json
 import os
 import unittest
 
 from DatabaseConnector.database_utils import get_tickers
-import DatabaseConnector.mysql_connect as mysql_connect
+from DatabaseConnector import mysql_connect
+from DatabaseConnector.av_api.av_api_update import av_database_update
 
 # Grab our API key from secrets
 try:
@@ -16,7 +19,7 @@ except:
 # Memory safe DB config file import
 DB_CONFIGS = None
 current_dir = os.path.dirname(__file__)
-config_path = os.path.join(current_dir, "db_config.json")
+config_path = os.path.join(current_dir, "DatabaseConnector/db_config.json")
 config_file = open(config_path)
 
 # database interface object
@@ -29,7 +32,8 @@ config_file.close()
 def init_db():
     setupfile = None
     current_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-    config_path = os.path.join(current_dir, "DatabaseConnector", "sql", "daatabase_setup_script.sql")
+    config_path = os.path.join(current_dir, "DatabaseConnector", "sql",\
+                                "database_setup_script.sql")
     with open(config_path, 'r') as file:
         setupfile = file.read()
         dbi.sql_execute(setupfile)
@@ -39,8 +43,9 @@ class fetch_sql_test(unittest.TestCase):
         init_db()
         with open('av_test_data.json', 'r') as file:
             test_data = json.load(file)
+            av_database_update('TIME_SERIES_DAILY', True, 'AAPL')
             test_json = get_tickers('AAPL', 'daily')
             self.assertEqual(test_data, test_json)
 
-if(__name__ == "__main__"):
+if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,6 @@
 from flask import Flask
 
-from database_utils import *
+from DatabaseConnector.database_utils import *
 
 app = Flask(__name__)
 @app.route('/')

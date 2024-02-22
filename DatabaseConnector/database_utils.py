@@ -3,11 +3,9 @@ from errno import errorcode
 import os
 import json
 
-import mysql.connector
-
-from av_api.av_api_main import *
-from database_utils import *
-from mysql_connect import MySQLConnect
+from DatabaseConnector.av_api.av_api_main import *
+from DatabaseConnector.database_utils import *
+from DatabaseConnector.mysql_connect import MySQLConnect
 
 # Memory safe DB config file import
 DB_CONFIGS = None

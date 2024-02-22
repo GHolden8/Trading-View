@@ -3,8 +3,7 @@ import json
 import os
 
 from alpha_vantage.timeseries import TimeSeries
-
-from av_api_exceptions import InvalidFunctionException, InvalidIntervalException
+from DatabaseConnector.av_api.av_api_exceptions import InvalidFunctionException, InvalidIntervalException
 
 CONFIGS = None
 current_dir = os.path.dirname(__file__)
