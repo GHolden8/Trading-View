@@ -6,10 +6,10 @@ import os
 
 from DatabaseConnector.av_api.av_api_main import get_series
 from DatabaseConnector import mysql_connect
+from DatabaseConnector.database_utils import *
 
 CONFIGS = None
-current_dir = os.path.dirname(__file__)
-config_path = os.path.join(current_dir, "api_config.json")
+config_path = os.path.join(os.getcwd(), "DatabaseConnector/av_api/api_config.json")
 config_file = open(config_path)
 CONFIGS = json.load(config_file)
 config_file.close()
@@ -39,19 +39,18 @@ def av_database_update(interval='TIME_SERIES_DAILY', fullness=False, target_stoc
     """
 
     if target_stock:
-        query = f"""
-            SELECT ticker
-            FROM tracked_tickers
-            WHERE ticker = '{target_stock}'
-            ;
-        """
-
-    tickers = dbi.sql_select(query)
+        tickers = []
+        tickers.append(target_stock)
+    else:
+        tickers = dbi.sql_select(query)
 
     # Get the latest stock data for each ticker
     for ticker in tickers:
         # Get the latest stock data for the ticker
-        symbol = ticker[0]
+        if(isinstance(ticker, list)):
+            symbol = ticker[0]
+        else:
+            symbol = ticker
         data = get_series(interval, symbol, interval, API_KEY, full=fullness)
 
         # Insert the latest stock data into the database
