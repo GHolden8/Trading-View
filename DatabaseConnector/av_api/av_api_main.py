@@ -2,7 +2,8 @@ import requests
 import json
 import os
 
-from alpha_vantage.timeseries import TimeSeries
+# from DatabaseConnector.av_api.alpha_vantage.timeseries import TimeSeries
+from alpha_vantage import timeseries
 from DatabaseConnector.av_api.av_api_exceptions import InvalidFunctionException, InvalidIntervalException
 
 CONFIGS = None
@@ -20,7 +21,7 @@ API_KEY = CONFIGS['av_api_keys'][0]
 
 def get_series(function, symbol, interval, api_key, month = None, full=False):
     '''This function will return a dictionary of time series data for the specified symbol and time interval.'''
-    ts = TimeSeries(key=api_key, output_format='json')
+    ts = timeseries.TimeSeries(key=api_key, output_format='json')
 
     try:
         # Get time series data based on function, symbol, and interval
