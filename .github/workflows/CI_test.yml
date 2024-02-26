@@ -37,4 +37,6 @@ jobs:
       env: 
         TEST_API_KEY_AV: ${{ secrets.TEST_API_KEY_AV }}
       run: |
+        sudo /etc/init.d/mysql start
+        sudo mysql -u root -p root
         pytest
