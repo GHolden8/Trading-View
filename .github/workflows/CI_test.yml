@@ -38,5 +38,5 @@ jobs:
         TEST_API_KEY_AV: ${{ secrets.TEST_API_KEY_AV }}
       run: |
         sudo /etc/init.d/mysql start
-        sudo mysql -e "CREATE DATABASE IF NOT EXISTS stocktracker;" -uroot -proot
+        sudo mysql -uroot -proot
         pytest
