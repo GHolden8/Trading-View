@@ -53,21 +53,6 @@ def av_database_update(interval='TIME_SERIES_DAILY', fullness=False, target_stoc
             symbol = ticker
         data = get_series(interval, symbol, interval, API_KEY, full=fullness)
 
-        tickerid = get_tickerid_by_symbol(symbol)
-
         # Insert the latest stock data into the database
         for date, values in data.items():
-            insert = f"""
-                INSERT INTO ticker_dataset
-                VALUES (
-                    '{tickerid}',
-                    '{date}',
-                    '{interval}',
-                    {values['1. open']},
-                    {values['2. high']},
-                    {values['3. low']},
-                    {values['4. close']}
-                )
-                ;
-            """
-            dbi.sql_execute(insert)
+            insert_candle(symbol, date, interval, values['1. open'], values['2. high'], values['3. low'], values['4. close'])

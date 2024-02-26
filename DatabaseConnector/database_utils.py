@@ -68,7 +68,7 @@ def insert_candle(symbol, timestamp, interval, open, high, low, close):
         {high},
         {low},
         {close}
-    ) ON DUPLICATE KEY UPDATE tickerid = tickerid, timestamp = timestamp, interval = interval, open = open, high = high, low = low, close = close
+    ) ON DUPLICATE KEY UPDATE tickerid = tickerid
     ;
     """
     dbi.sql_execute(query)

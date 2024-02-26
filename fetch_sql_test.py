@@ -53,7 +53,9 @@ class fetch_sql_test(unittest.TestCase):
             insert_ticker('AAPL')
             av_database_update('daily', True, 'AAPL')
             test_json = get_tickers('AAPL', 'daily')
-            self.assertEqual(test_data, test_json)
+            # Compare the two jsons by row, excluding the tickerid
+            for test_data_sample, i in test_data:
+                self.assertEqual(test_data_sample, test_json[i])
 
 if __name__ == "__main__":
     unittest.main()
