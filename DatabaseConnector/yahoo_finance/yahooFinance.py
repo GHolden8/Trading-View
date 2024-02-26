@@ -1,7 +1,10 @@
 import requests
 import datetime
 
-from yahoo_finance import yahooException
+from time import sleep
+import random
+
+from DatabaseConnector.yahoo_finance import yahooException
 # dissecting the request for CSV tabular output is the following:
 # the request is rather simple...
 ENDPOINT = "https://query1.finance.yahoo.com/v7/finance/download"
@@ -14,8 +17,7 @@ INTERVALS = {
     "30min": "N/A",
     "60min": "N/A",
     "daily": "1d",
-    "weekly": "1wk",
-    "monthly": "1mo"
+    "weekly": "1wk"
 }
 
 
@@ -36,9 +38,8 @@ def retrieve_data(asset, start_epoch, end_epoch, interval):
     # the two data interfaces use a different interval type, which means it must be translated to their native version.
     # modify headers to mimic a browser -- this is a dirty trick...
     headers = {
-        "User-Agent": "Special Agent Open Sesame 1.69"
+        "User-Agent": "Pretty Please? 1.69"
     }
-
     start_epoch = modtime(start_epoch, interval)
     end_epoch = modtime(end_epoch, interval)
 
@@ -46,17 +47,17 @@ def retrieve_data(asset, start_epoch, end_epoch, interval):
     interval = INTERVALS.get(interval)
     if interval == "N/A":
         raise yahooException("Warning: Invalid Yahoo API Interval.")
-    uri = f"{ENDPOINT}/{asset}?period1={start_epoch}&period2={end_epoch}&interval={interval}&events=history&includeAdjustedClose=true"
+    uri = f"{ENDPOINT}/{asset}?period1={int(start_epoch)}&period2={int(end_epoch)}&interval={interval}&events=history&includeAdjustedClose=true"
     
     # print(uri)
 
     data = requests.get(uri, headers=headers).text
+    sleep(3+random.randint(1, 7)) # Jitter to avoid being too rash
 
     formatted_data = []
     # skips column line
     for line in data.split('\n')[1:]:
         line_cols = line.split(',')
-        print(line)
         formatted_data.append(
             {
                 "date": datetime.datetime.strptime(line_cols[0], '%Y-%m-%d'),

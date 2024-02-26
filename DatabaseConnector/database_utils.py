@@ -4,6 +4,7 @@ import os
 import json
 
 from DatabaseConnector.av_api.av_api_main import *
+from DatabaseConnector.yahoo_finance.yahooFinance import *
 from DatabaseConnector.database_utils import *
 from DatabaseConnector.mysql_connect import MySQLConnect
 
@@ -40,6 +41,36 @@ def insert_ticker(ticker):
         ;
     """
     dbi.sql_execute(insert)
+
+def insert_candle(symbol, timestamp, interval, open, high, low, close):
+    ''' Inserts a candle to a symbol cooresponding to passed parameters. '''
+    id = get_tickerid_by_symbol(symbol)
+    if id is None:
+        # inserting ticker which does not exist
+        insert_ticker(symbol)
+        id = get_tickerid_by_symbol(symbol)
+
+    query = f"""
+    INSERT INTO ticker_dataset (
+        `tickerid`,
+        `timestamp`,
+        `interval`,
+        `open`,
+        `high`,
+        `low`,
+        `close`
+    ) VALUES (
+        {id},
+        "{timestamp}",
+        "{interval}",
+        {open},
+        {high},
+        {low},
+        {close}
+    ) ON DUPLICATE KEY UPDATE tickerid = tickerid
+    ;
+    """
+    dbi.sql_execute(query)
 
 def get_tickers(symbol, interval):
     ''' Returns a symbol ticker dataset at a particular interval. Must be valid interval'''
@@ -116,3 +147,24 @@ def remove_favorite(symbol):
         WHERE tt.ticker = {symbol};
     """
     dbi.sql_execute(query)
+
+''' Bulk Download Methods '''
+
+def bulk_download(symbols, start_epoch, end_epoch, interval): 
+    ''' Bulk Download a list of Symbols '''
+    for symbol in symbols:
+        data = retrieve_data(symbol, start_epoch, end_epoch, interval)
+        counter = 0
+        for candle in data:
+            print(symbol, "Percent Complete:", '%2f' % (counter/len(data)*100.0))
+            insert_candle(
+                symbol,
+                candle.get('date'),
+                interval,
+                candle.get('open'),
+                candle.get('high'),
+                candle.get('low'),
+                candle.get('close')
+            )
+            counter += 1
+    

@@ -1,4 +1,7 @@
 from flask import Flask
+from threading import Thread
+from time import sleep, time
+import sys
 
 from DatabaseConnector.database_utils import *
 
@@ -75,4 +78,65 @@ def failure_handler():
     return r'{"success": false}'
 
 if __name__ == "__main__":
+    args = sys.argv
+    for arg in args:
+        arg = arg.lower()
+
+    STOCKS = [
+        'AAPL'
+        'MSFT',
+        'NVDA',
+        'GOOGL',
+        'META',
+        'BRK.B',
+        'LLY',
+        'TSLA',
+        'AVGO',
+        'V',
+        'JPM',
+        'UNH',
+        'MA',
+        'HD',
+        'AMZN',
+        'XOM'
+    ]
+
+    INTERVAL_LIST = [
+        'daily'
+    ]
+
+
+    if '--build' in args:
+        if input("Nuke Database? This will wipe ALL price data? Y/n: ").lower() == 'y':
+            print("Droping and Rebuilding DB in 5 seconds...")
+            sleep(5)
+            # nuke + rebuild DB
+            raise NotImplementedError("To be implemented at a later date.")
+
+        else:
+            print("aborted.")
+            exit(1)
+
+    if '--populate' in args:
+        # populate with current data
+        if input("Bulk Download ALL price data? Y/n: ").lower() == 'y':
+            print("\n")
+            print("Relentlessly scraping Yahoo Finance in 5...\n")
+            for i in range(4):
+                sleep(1)
+            print("Please be patient. Bulk Downloading...")
+            for interval in INTERVAL_LIST:
+                # timestamp of 1267079403 is twelve years ago.
+                bulk_download(STOCKS, 1267079403, time(), interval)
+
+
+        else:
+            print("aborted.")
+            exit(1)
+
+    if '--update' in args:
+        # update db for last seven days of price data.
+        raise NotImplementedError("To be added at a later date")
+
+
     app.run(host='127.0.0.1', port=8080)
