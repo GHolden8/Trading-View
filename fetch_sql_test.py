@@ -42,16 +42,8 @@ def init_db():
         cursor = connection.cursor()
         statement = ""
         with open(config_path, 'r') as file:
-            for line in file:
-                if line.strip().startswith('--'):  # ignore sql comment lines
-                    continue
-                if not line.strip().endswith(';'):  # keep appending lines that don't end in ';'
-                    statement = statement + line
-                else:  # when you get a line ending in ';' then exec statement and reset for next statement
-                    statement = statement + line
-                    #print "\n\n[DEBUG] Executing SQL statement:\n%s" % (statement)
-                    cursor.execute(statement)
-                    statement = ""
+            sql_commands = file.read()
+            cursor.execute(sql_commands, multi=True)
 
 class fetch_sql_test(unittest.TestCase):
     def test_fetch_sql(self):
