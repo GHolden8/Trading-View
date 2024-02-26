@@ -29,25 +29,8 @@ config_file.close()
 db_user = DB_CONFIGS['username']
 db_pass = DB_CONFIGS['password']
 
-
-def init_db():
-    config_path = os.path.join(current_dir, "DatabaseConnector", "sql",\
-                                "database_setup_script.sql")
-    # Connect to the database
-    with m.connect(
-            host="localhost",
-            user=db_user,
-            password=db_pass
-        ) as connection:
-        cursor = connection.cursor()
-        statement = ""
-        with open(config_path, 'r') as file:
-            sql_commands = file.read()
-            cursor.execute(sql_commands, multi=True)
-
 class fetch_sql_test(unittest.TestCase):
     def test_fetch_sql(self):
-        init_db()
         with open('tests/av_test_data.json', 'r') as file:
             test_data = json.load(file)
             insert_ticker('AAPL')
