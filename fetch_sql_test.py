@@ -7,7 +7,7 @@ import unittest
 
 import mysql.connector as m
 
-from DatabaseConnector.database_utils import get_tickers
+from DatabaseConnector.database_utils import get_tickers, insert_ticker
 from DatabaseConnector.av_api.av_database_update import av_database_update
 
 # Grab our API key from secrets
@@ -50,7 +50,8 @@ class fetch_sql_test(unittest.TestCase):
         init_db()
         with open('tests/av_test_data.json', 'r') as file:
             test_data = json.load(file)
-            av_database_update('TIME_SERIES_DAILY', True, 'AAPL')
+            insert_ticker('AAPL')
+            av_database_update('daily', True, 'AAPL')
             test_json = get_tickers('AAPL', 'daily')
             self.assertEqual(test_data, test_json)
 

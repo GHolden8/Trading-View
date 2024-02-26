@@ -38,6 +38,7 @@ def insert_ticker(ticker):
     insert = f"""
         INSERT INTO tracked_tickers
         VALUES ("{ticker}", NULL, 0)
+        ON DUPLICATE KEY UPDATE ticker = ticker
         ;
     """
     dbi.sql_execute(insert)
@@ -67,7 +68,7 @@ def insert_candle(symbol, timestamp, interval, open, high, low, close):
         {high},
         {low},
         {close}
-    ) ON DUPLICATE KEY UPDATE tickerid = tickerid
+    ) ON DUPLICATE KEY UPDATE tickerid = tickerid, timestamp = timestamp, interval = interval, open = open, high = high, low = low, close = close
     ;
     """
     dbi.sql_execute(query)

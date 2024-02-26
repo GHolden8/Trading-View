@@ -25,16 +25,16 @@ def get_series(function, symbol, interval, api_key, month = None, full=False):
 
     try:
         # Get time series data based on function, symbol, and interval
-        if function == 'TIME_SERIES_INTRADAY':
+        if function == 'intraday':
             data, _ = ts.get_intraday(symbol=symbol, interval=interval, month = month, outputsize='full' if full else 'compact')
-        elif function == 'TIME_SERIES_DAILY':
+        elif function == 'daily':
             data, _ = ts.get_daily(symbol=symbol, outputsize='full' if full else 'compact')
-        elif function == 'TIME_SERIES_WEEKLY':
+        elif function == 'weekly':
             data, _ = ts.get_weekly(symbol=symbol, outputsize='full' if full else 'compact')
-        elif function == 'TIME_SERIES_MONTHLY':
+        elif function == 'monthly':
             data, _ = ts.get_monthly(symbol=symbol, outputsize='full' if full else 'compact')
         else:
-            raise ValueError("Invalid function provided")
+            raise ValueError("Invalid function provided: " + function)
         
         return data
 
