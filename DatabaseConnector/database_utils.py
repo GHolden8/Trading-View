@@ -95,8 +95,9 @@ def get_tickers(symbol, interval):
 def get_tracked_tickers():
     ''' Returns a list of all tracked tickers.'''
     query = f"""
-    SELECT * from tracked_tickers
-    ORDER BY tickerid ASC
+    SELECT ticker
+    FROM tracked_tickers
+    ORDER BY ticker ASC
     """
     db_out = dbi.sql_select(query)
     if len(db_out) == 0:
