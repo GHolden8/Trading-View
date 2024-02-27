@@ -35,9 +35,9 @@ def get_series(function, symbol, interval, api_key, full=False):
         elif function == 'daily':
             data, _, __ = ts.get_daily(symbol=symbol, outputsize='full' if full else 'compact')
         elif function == 'weekly':
-            data, _, __ = ts.get_weekly(symbol=symbol, outputsize='full' if full else 'compact')
+            data, _, __ = ts.get_weekly(symbol=symbol)
         elif function == 'monthly':
-            data, _, __ = ts.get_monthly(symbol=symbol, outputsize='full' if full else 'compact')
+            data, _, __ = ts.get_monthly(symbol=symbol)
         else:
             raise ValueError("Invalid function provided: " + function)
         return data
