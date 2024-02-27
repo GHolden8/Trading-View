@@ -27,12 +27,12 @@ const CandlestickChart = () => {
 
   const formatData = (data) => {
     // I think this is current format???
-    // { datasets: [{ data: [{ t: 1, h: 15, l: 5, c: 12 }] }] } time, high, low, close?
+    // { datasets: [{ data: [{ t: someday, h: 100, l: 100, c: 100 }] }] } time, high, low, close?
   };
 
   return (
     <div>
-      //<h2>*Name of current company*</h2> heading if needed can pull company_name if in database
+      //<h2>*Name of current company*</h2> heading if needed can pull company_name if in database otherwise html header in stock is fine
       <Line data={chartData} />
     </div>
   );
