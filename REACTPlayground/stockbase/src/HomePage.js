@@ -8,8 +8,8 @@ function HomePage() {
   return (
     <div>
       <h1>Welcome to the Home Page!</h1>
-      <button onClick={() => navigate('/portfolio')}>Go to Portfolio Page</button>
-      <button onClick={() => navigate('/stockexaminer')}>Go to Home Page</button>
+      <button onClick={() => navigate('/stockfavorites')}>Go to Favorite Stocks Page</button>
+      <button onClick={() => navigate('/stockexaminer')}>Go to Stock Examiner Page</button>
     </div>
   );
 }
