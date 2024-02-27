@@ -1,11 +1,9 @@
 #Imports
-from errno import errorcode
 import os
 import json
 
 from DatabaseConnector.av_api.av_api_main import *
 from DatabaseConnector.yahoo_finance.yahooFinance import *
-from DatabaseConnector.database_utils import *
 from DatabaseConnector.mysql_connect import MySQLConnect
 
 # Memory safe DB config file import
@@ -33,7 +31,7 @@ def get_tickerid_by_symbol(symbol):
 
 def insert_ticker(ticker):
     '''Inserts a ticker into the tracked_tickers table'''
-    insert = f"""
+    insert = """
         INSERT INTO tracked_tickers
         VALUES ("{ticker}", NULL, 0)
         ON DUPLICATE KEY UPDATE ticker = ticker
@@ -94,7 +92,7 @@ def get_tickers(symbol, interval):
 
 def get_tracked_tickers():
     ''' Returns a list of all tracked tickers.'''
-    query = f"""
+    query = """
     SELECT ticker
     FROM tracked_tickers
     ORDER BY ticker ASC
@@ -126,7 +124,7 @@ def get_latest_price_data(symbol):
 
 def get_favorites():
     ''' Returns a list of the tickers flagged as user favorites '''
-    query = f"""
+    query = """
     SELECT ticker
     FROM tracked_tickers
     WHERE is_favorite = 1
@@ -161,7 +159,7 @@ def remove_favorite(symbol):
 
 ''' Bulk Download Methods '''
 
-def bulk_download(symbols, start_epoch, end_epoch, interval): 
+def bulk_download(symbols, start_epoch, end_epoch, interval):
     ''' Bulk Download a list of Symbols '''
     for symbol in symbols:
         data = retrieve_data(symbol, start_epoch, end_epoch, interval)

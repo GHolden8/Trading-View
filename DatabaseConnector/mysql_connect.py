@@ -1,5 +1,8 @@
-from mysql.connector import connect, Error
+''' The abstract MySQL connector. '''
+
 import json
+
+from mysql.connector import connect, Error
 
 LISCENCE = """
 Abstract MYSQL Connector class property of Operational Security Solutions (OSS) All Rights Reserved.
@@ -22,7 +25,7 @@ class MySQLConnect:
 
         self.configs = json.load(json_configs)
         json_configs.close()
-        
+
         # loading configs
         self.host = self.configs['hostname']
         self.user = self.configs['username']
@@ -34,7 +37,8 @@ class MySQLConnect:
 
     def sql_execute(self, query):
         """
-        Executes SQL query based on configuration settings. This is for things like inserting and updating where no
+        Executes SQL query based on configuration settings. This is for things like inserting
+        and updating where no
         tuple returns are requested.
         """
 

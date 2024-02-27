@@ -4,10 +4,8 @@ import datetime
 import decimal
 import json
 import os
-import re
 import unittest
 
-import mysql.connector as m
 
 from DatabaseConnector.database_utils import get_tickers, insert_ticker
 from DatabaseConnector.av_api.av_database_update import av_database_update
@@ -47,10 +45,14 @@ class fetch_sql_test(unittest.TestCase):
             for row in test_data:
                 rowtime = datetime.datetime.strptime(row, "%Y-%m-%d")
                 self.assertEqual(rowtime, test_json[i][0])
-                self.assertEqual(round(decimal.Decimal(test_data[row]["1. open"]), 2), test_json[i][2])
-                self.assertEqual(round(decimal.Decimal(test_data[row]["2. high"]), 2), test_json[i][3])
-                self.assertEqual(round(decimal.Decimal(test_data[row]["3. low"]), 2), test_json[i][4])
-                self.assertEqual(round(decimal.Decimal(test_data[row]["4. close"]), 2), test_json[i][5])
+                self.assertEqual(round(decimal.Decimal\
+                    (test_data[row]["1. open"]), 2), test_json[i][2])
+                self.assertEqual(round(decimal.Decimal\
+                    (test_data[row]["2. high"]), 2), test_json[i][3])
+                self.assertEqual(round(decimal.Decimal\
+                    (test_data[row]["3. low"]), 2), test_json[i][4])
+                self.assertEqual(round(decimal.Decimal\
+                    (test_data[row]["4. close"]), 2), test_json[i][5])
                 i+=1
 
 if __name__ == "__main__":
