@@ -51,6 +51,6 @@ def av_database_update(interval='TIME_SERIES_DAILY', fullness=False, target_stoc
         data = get_series(interval, symbol, interval, API_KEY, full=fullness)
 
         # Insert the latest stock data into the database
-        for date, values in data.items():
+        for date, values in data:
             insert_candle(symbol, date, interval, values['1. open'], \
                           values['2. high'], values['3. low'], values['4. close'])

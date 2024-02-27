@@ -12,13 +12,11 @@ from DatabaseConnector.mysql_connect import MySQLConnect
 DB_CONFIGS = None
 current_dir = os.path.dirname(__file__)
 config_path = os.path.join(current_dir, "db_config.json")
-config_file = open(config_path)
+with open(config_path) as config_file:
+    DB_CONFIGS = json.load(config_file)
 
 # database interface object
 dbi = MySQLConnect(config_path)
-
-DB_CONFIGS = json.load(config_file)
-config_file.close()
 
 def get_tickerid_by_symbol(symbol):
     """Converts a ticker symbol to a ticker id"""
@@ -94,6 +92,17 @@ def get_tickers(symbol, interval):
         return None
     return db_out
 
+def get_tracked_tickers():
+    ''' Returns a list of all tracked tickers.'''
+    query = f"""
+    SELECT * from tracked_tickers
+    ORDER BY tickerid ASC
+    """
+    db_out = dbi.sql_select(query)
+    if len(db_out) == 0:
+        return None
+    return db_out
+
 def get_latest_price_data(symbol):
     ''' Returns the rate of change of a Symbols movement in the last 24 hours'''
     query = f"""
@@ -111,7 +120,7 @@ def get_latest_price_data(symbol):
     if len(db_out) == 0:
         return None
     return db_out
-    
+
 
 
 def get_favorites():

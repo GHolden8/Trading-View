@@ -13,9 +13,8 @@ from DatabaseConnector.av_api.av_api_exceptions import\
 CONFIGS = None
 current_dir = os.path.dirname(__file__)
 config_path = os.path.join(current_dir, "api_config.json")
-config_file = open(config_path, "r")
-CONFIGS = json.load(config_file)
-config_file.close()
+with open(config_path, "r") as config_file:
+    CONFIGS = json.load(config_file)
 
 ENDPOINT = CONFIGS['api_endpoint']
 # key could be random, if a list were accumulated, for now it's just the first.
@@ -31,14 +30,14 @@ def get_series(function, symbol, interval, api_key, full=False):
     try:
         # Get time series data based on function, symbol, and interval
         if function == 'intraday':
-            data, _ = ts.get_intraday(symbol=symbol, interval=interval,\
+            data, _, __ = ts.get_intraday(symbol=symbol, interval=interval,\
                                     outputsize=('full' if full else 'compact'))
         elif function == 'daily':
-            data, _ = ts.get_daily(symbol=symbol, outputsize='full' if full else 'compact')
+            data, _, __ = ts.get_daily(symbol=symbol, outputsize='full' if full else 'compact')
         elif function == 'weekly':
-            data, _ = ts.get_weekly(symbol=symbol, outputsize='full' if full else 'compact')
+            data, _, __ = ts.get_weekly(symbol=symbol, outputsize='full' if full else 'compact')
         elif function == 'monthly':
-            data, _ = ts.get_monthly(symbol=symbol, outputsize='full' if full else 'compact')
+            data, _, __ = ts.get_monthly(symbol=symbol, outputsize='full' if full else 'compact')
         else:
             raise ValueError("Invalid function provided: " + function)
         return data
@@ -54,7 +53,7 @@ def get_time_series(function, symbol, interval, start_date, end_date, month, api
 
     try:
         # Get time series data within the specified time period
-        data = get_series(function, symbol, interval, api_key, month, True)
+        data = get_series(function, symbol, interval, api_key, True)
 
         # Filter data within the specified time period
         filtered_data = {}
@@ -66,7 +65,7 @@ def get_time_series(function, symbol, interval, start_date, end_date, month, api
 
     except Exception as e:
         print(e)
-        exit(1)
+        sys.exit(1)
 
 def validate_function(function):
     '''Alpha vantage API Function validation function'''
