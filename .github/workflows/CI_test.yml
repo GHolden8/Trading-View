@@ -38,5 +38,5 @@ jobs:
         TEST_API_KEY_AV: ${{ secrets.TEST_API_KEY_AV }}
       run: |
         sudo /etc/init.d/mysql start
-        sudo mysql -uroot -proot -e "$(cat $(find ../. -name database_setup_script.sql))
+        sudo mysql -uroot -proot -e "$(cat $(find ../../. -name database_setup_script.sql))
         pytest
