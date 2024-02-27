@@ -1,5 +1,7 @@
 '''This module runs the fetching unit test. It tests the get_tickers function from the database_utils module.'''
 
+import datetime
+import decimal
 import json
 import os
 import re
@@ -37,8 +39,19 @@ class fetch_sql_test(unittest.TestCase):
             av_database_update('daily', True, 'AAPL')
             test_json = get_tickers('AAPL', 'daily')
             # Compare the two jsons by row, excluding the tickerid
-            for test_data_sample, i in test_data:
-                self.assertEqual(test_data_sample, test_json[i])
+            
+            i = 0
+            initial_date = datetime.datetime(2023, 1, 3)
+            while test_json[i][0] < initial_date:
+                i += 1
+            for row in test_data:
+                rowtime = datetime.datetime.strptime(row, "%Y-%m-%d")
+                self.assertEqual(rowtime, test_json[i][0])
+                self.assertEqual(round(decimal.Decimal(test_data[row]["1. open"]), 2), test_json[i][2])
+                self.assertEqual(round(decimal.Decimal(test_data[row]["2. high"]), 2), test_json[i][3])
+                self.assertEqual(round(decimal.Decimal(test_data[row]["3. low"]), 2), test_json[i][4])
+                self.assertEqual(round(decimal.Decimal(test_data[row]["4. close"]), 2), test_json[i][5])
+                i+=1
 
 if __name__ == "__main__":
     unittest.main()
