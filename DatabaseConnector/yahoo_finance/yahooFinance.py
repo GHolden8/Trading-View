@@ -6,7 +6,7 @@ import datetime
 
 import requests
 
-from DatabaseConnector.yahoo_finance import yahooException
+from DatabaseConnector.yahoo_finance.yahooException import YahooException
 # dissecting the request for CSV tabular output is the following:
 # the request is rather simple...
 ENDPOINT = "https://query1.finance.yahoo.com/v7/finance/download"
@@ -34,7 +34,7 @@ def modtime(epoch, interval):
     try:
         return epoch - ( epoch % second_intervals.get(interval))
     except KeyError:
-        raise yahooException("Warning: Invalid Yahoo API Interval.")
+        raise YahooException("Warning: Invalid Yahoo API Interval.")
 
 def retrieve_data(asset, start_epoch, end_epoch, interval):
     '''Yahoo Finance Data acquisition. Only 'daily' 'weekly' and 'monthly' data supported.'''
@@ -50,7 +50,7 @@ def retrieve_data(asset, start_epoch, end_epoch, interval):
     # setting interval to Yahoo Finance Applicable intervals
     interval = INTERVALS.get(interval)
     if interval == "N/A":
-        raise yahooException("Warning: Invalid Yahoo API Interval.")
+        raise YahooException("Warning: Invalid Yahoo API Interval.")
     uri = f"{ENDPOINT}/{asset}?period1={int(start_epoch)}&period2={int(end_epoch)}&interval={interval}&events=history&includeAdjustedClose=true"
 
     # print(uri)
