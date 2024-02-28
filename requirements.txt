@@ -1,0 +1,4 @@
+requests
+mysql-connector-python
+flask
+alpha_vantage
