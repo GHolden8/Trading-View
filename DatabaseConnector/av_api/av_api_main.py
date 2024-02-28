@@ -46,7 +46,7 @@ def get_series(function, symbol, interval, api_key, full=False):
         print(e)
         sys.exit(1)
 
-def get_time_series(function, symbol, interval, start_date, end_date, month, api_key):
+def get_time_series(function, symbol, interval, start_date, end_date, api_key):
     '''This function will return a dictionary of time series data for the 
         specified symbol and time period. 
         The time series data will be filtered based on the specified time interval.'''
