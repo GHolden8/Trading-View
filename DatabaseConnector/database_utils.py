@@ -31,11 +31,10 @@ def get_tickerid_by_symbol(symbol):
 
 def insert_ticker(ticker):
     '''Inserts a ticker into the tracked_tickers table'''
-    insert = """
+    insert = f"""
         INSERT INTO tracked_tickers
-        VALUES ("{ticker}", NULL, 0)
-        ON DUPLICATE KEY UPDATE ticker = ticker
-        ;
+        VALUES (\"{ticker}\", NULL, 0)
+        ON DUPLICATE KEY UPDATE ticker = ticker;
     """
     dbi.sql_execute(insert)
 

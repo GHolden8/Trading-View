@@ -23,7 +23,7 @@ USE `stocktracker` ;
 -- Table `stocktracker`.`tracked_tickers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `stocktracker`.`tracked_tickers` (
-  `ticker` CHAR(5) NOT NULL,
+  `ticker` VARCHAR(6) NOT NULL,
   `tickerid` INT(10) NOT NULL AUTO_INCREMENT,
   `is_favorite` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`tickerid`),

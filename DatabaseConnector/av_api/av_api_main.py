@@ -33,11 +33,11 @@ def get_series(function, symbol, interval, api_key, full=False):
             data, _, __ = ts.get_intraday(symbol=symbol, interval=interval,\
                                     outputsize=('full' if full else 'compact'))
         elif function == 'daily':
-            data, _, __ = ts.get_daily(symbol=symbol, outputsize='full' if full else 'compact')
+            data, _ = ts.get_daily(symbol=symbol, outputsize='full' if full else 'compact')
         elif function == 'weekly':
-            data, _, __ = ts.get_weekly(symbol=symbol)
+            data, _ = ts.get_weekly(symbol=symbol)
         elif function == 'monthly':
-            data, _, __ = ts.get_monthly(symbol=symbol)
+            data, _ = ts.get_monthly(symbol=symbol)
         else:
             raise ValueError("Invalid function provided: " + function)
         return data

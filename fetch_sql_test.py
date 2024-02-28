@@ -7,7 +7,7 @@ import os
 import unittest
 
 
-from DatabaseConnector.database_utils import get_tickers, insert_ticker
+from DatabaseConnector.database_utils import bulk_download, get_tickers, insert_ticker
 from DatabaseConnector.av_api.av_database_update import av_database_update
 
 # Grab our API key from secrets
@@ -34,7 +34,7 @@ class fetch_sql_test(unittest.TestCase):
         with open('tests/av_test_data.json', 'r') as file:
             test_data = json.load(file)
             insert_ticker('AAPL')
-            av_database_update('daily', True, 'AAPL')
+            bulk_download({'AAPL'}, 1672531200, 1675209600, 'daily')
             test_json = get_tickers('AAPL', 'daily')
             # Compare the two jsons by row, excluding the tickerid
             
