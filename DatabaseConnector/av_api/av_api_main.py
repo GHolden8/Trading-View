@@ -93,7 +93,7 @@ def validate_interval(interval):
 
 # Testing stuff
 if __name__ == "__main__":
-    response = get_time_series('TIME_SERIES_DAILY', 'AAPL', None, '2023-01-03',\
+    response = get_time_series('daily', 'AAPL', None, '2023-01-03',\
                                 '2023-01-05', API_KEY)
     with open("av_test_data.json", "w") as file:
         json.dump(response, file, ensure_ascii=False, indent=4)

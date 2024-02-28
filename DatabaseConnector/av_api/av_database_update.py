@@ -26,7 +26,7 @@ with open(config_path, "r") as config_file:
 # database interface object
 dbi = mysql_connect.MySQLConnect(config_path)
 
-def av_database_update(interval='TIME_SERIES_DAILY', fullness=False, target_stock=None):
+def av_database_update(interval='daily', fullness=False, target_stock=None):
     '''This function updates the database with the latest stock data from the Alpha Vantage API.'''
     # Get all tracked tickers
     query = """
@@ -36,21 +36,19 @@ def av_database_update(interval='TIME_SERIES_DAILY', fullness=False, target_stoc
     """
 
     if target_stock:
-        tickers = []
-        tickers.append(target_stock)
+        tickers = {target_stock}
     else:
         tickers = dbi.sql_select(query)
 
     # Get the latest stock data for each ticker
     for ticker in tickers:
         # Get the latest stock data for the ticker
-        if isinstance(ticker, list):
-            symbol = ticker[0]
-        else:
-            symbol = ticker
+        symbol = ticker[0]
         data = get_series(interval, symbol, interval, API_KEY, full=fullness)
 
         # Insert the latest stock data into the database
-        for date, values in data:
+        for date, values in data.items():
             insert_candle(symbol, date, interval, values['1. open'], \
                           values['2. high'], values['3. low'], values['4. close'])
+
+av_database_update()

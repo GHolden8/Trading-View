@@ -21,7 +21,7 @@ def get_tickerid_by_symbol(symbol):
     query = f"""
         SELECT tickerid
         FROM tracked_tickers
-        WHERE ticker = '{symbol}'
+        WHERE ticker = \'{symbol}\'
         ;
     """
     db_out = dbi.sql_select(query)
