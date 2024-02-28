@@ -37,7 +37,7 @@ class fetch_sql_test(unittest.TestCase):
             bulk_download({'AAPL'}, 1672531200, 1675209600, 'daily')
             test_json = get_tickers('AAPL', 'daily')
             # Compare the two jsons by row, excluding the tickerid
-            
+
             i = 0
             initial_date = datetime.datetime(2023, 1, 3)
             while test_json[i][0] < initial_date:

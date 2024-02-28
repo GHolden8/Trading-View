@@ -11,6 +11,7 @@ except:
     API_KEY = "demo"
 
 class av_api_test(unittest.TestCase):
+    '''Tests the AV API'''
     def test_api_fetch(self):
         # Get the API data in JSON format
         url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=' + API_KEY

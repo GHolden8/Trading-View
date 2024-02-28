@@ -73,8 +73,8 @@ class MySQLConnect:
             ) as connection:
                 with connection.cursor() as cursor:
                     cursor = connection.cursor(buffered=True)
-                    result = cursor.execute(query)
-                    
+                    cursor.execute(query)
+
                     rows = cursor.fetchall()
                     connection.commit()
                     return rows

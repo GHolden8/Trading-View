@@ -1,3 +1,6 @@
+'''The database utilities module.
+Contains various utilities for working with the database.'''
+
 #Imports
 import os
 import json
