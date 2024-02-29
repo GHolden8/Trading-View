@@ -141,10 +141,8 @@ def set_favorite(symbol):
     ''' Add Symbol to Favorites '''
     query = f"""
         UPDATE tracked_tickers tt
-            JOIN ticker_dataset td
-                ON td.tickerid = tt.tickerid
         SET is_favorite = 1
-        WHERE tt.ticker = {symbol};
+        WHERE tt.ticker = \'{symbol}\';
     """
     dbi.sql_execute(query)
 
@@ -152,10 +150,8 @@ def remove_favorite(symbol):
     ''' Remove Symbol from Favorites '''
     query = f"""
         UPDATE tracked_tickers tt
-            JOIN ticker_dataset td
-                ON td.tickerid = tt.tickerid
         SET is_favorite = 0
-        WHERE tt.ticker = {symbol};
+        WHERE tt.ticker = \'{symbol}\';
     """
     dbi.sql_execute(query)
 
