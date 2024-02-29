@@ -57,9 +57,9 @@ def get_time_series(function, symbol, interval, start_date, end_date, api_key):
 
         # Filter data within the specified time period
         filtered_data = {}
-        for date, values in data:
-            if start_date <= date <= end_date:
-                filtered_data[date] = values
+        for datavalue in data:
+            if start_date <= datavalue[0] <= end_date:
+                filtered_data[datavalue[0]] = data[datavalue[0]]
 
         return filtered_data
 
