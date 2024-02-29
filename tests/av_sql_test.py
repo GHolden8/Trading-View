@@ -4,13 +4,7 @@ import unittest
 
 from DatabaseConnector.av_api.av_api_main import get_time_series
 
-# Grab our API key from secrets
-try:
-    # OS environ not conducive to cross-platform dev, lets change this to a config. Private Repo
-    API_KEY = os.environ['TEST_API_KEY_AV']
-
-except:
-    API_KEY = "demo"
+API_KEY = "ZFH8GYRZVTGCPCIV"
 
 class av_sql_test(unittest.TestCase):
     '''Tests the get_time_series function against a given JSON file.'''
