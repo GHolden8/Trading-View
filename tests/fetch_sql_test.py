@@ -8,7 +8,6 @@ import unittest
 
 
 from DatabaseConnector.database_utils import bulk_download, get_tickers, insert_ticker
-from DatabaseConnector.av_api.av_database_update import av_database_update
 
 # Grab our API key from secrets
 try:
