@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS `stocktracker`.`ticker_dataset` (
   CONSTRAINT `fk_ticker_dataset_1`
     FOREIGN KEY (`tickerid`)
     REFERENCES `stocktracker`.`tracked_tickers` (`tickerid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
