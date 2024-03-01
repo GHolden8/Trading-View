@@ -27,6 +27,37 @@ def get_data(symbol, interval):
     }
     return response
 
+@app.route('/nonfavorites')
+def at_a_glance():
+    formatted_data = []
+    for x in get_non_favorites():
+        ticker = x[0]
+        latest_price_data = get_latest_price_data(ticker)
+        last_price = float(latest_price_data[0][1])
+        current_price = float(latest_price_data[1][1])
+        
+        if last_price >= current_price: # change negative
+            decrease = last_price - current_price
+            change = -float(decrease/last_price)
+        else: # change positive
+            increase = current_price - last_price
+            change = float(increase/last_price)
+        
+        change *= 100.0
+
+        formatted_data.append(
+            {
+                "id": ticker,
+                "latest": current_price,
+                "percent_change": "%.2f" % change
+            }
+        )
+
+    response = {
+        "stocks": formatted_data
+    }
+    return json.dumps(response)
+
 @app.route('/favorites')
 def get_favorite_tickers():
     favorites = get_favorites()
@@ -34,7 +65,6 @@ def get_favorite_tickers():
     for x in favorites:
         ticker = x[0]
         latest_price_data = get_latest_price_data(ticker)
-        print(latest_price_data)
         last_price = float(latest_price_data[0][1])
         current_price = float(latest_price_data[1][1])
         

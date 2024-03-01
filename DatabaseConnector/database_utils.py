@@ -137,6 +137,19 @@ def get_favorites():
         return None
     return db_out
 
+def get_non_favorites():
+    ''' Returns a list of ticker that are NOT set as user favorites. '''
+    query = """
+    SELECT ticker
+    FROM tracked_tickers
+    WHERE is_favorite = 0
+    """
+    db_out = dbi.sql_select(query)
+
+    if len(db_out) == 0:
+        return None
+    return db_out
+
 def set_favorite(symbol):
     ''' Add Symbol to Favorites '''
     query = f"""
