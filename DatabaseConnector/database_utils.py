@@ -71,22 +71,41 @@ def insert_candle(symbol, timestamp, interval, open, high, low, close):
     """
     dbi.sql_execute(query)
 
-def get_tickers(symbol, interval):
+def get_tickers(symbol, interval, start=None, end=None):
     ''' Returns a symbol ticker dataset at a particular interval. Must be valid interval'''
-    query = f"""
-    SELECT td.`timestamp`,
-        td.`interval`,
-        td.open,
-        td.high,
-        td.low,
-        td.close
-    FROM tracked_tickers tt
-    JOIN ticker_dataset AS td
-        ON td.tickerid = tt.tickerid
-    WHERE tt.ticker = '{symbol}' AND td.interval = '{interval}'
-    ORDER BY td.`timestamp` ASC
-    ;
-    """
+    if start is None and end is None:
+        query = f"""
+        SELECT td.`timestamp`,
+            td.`interval`,
+            td.open,
+            td.high,
+            td.low,
+            td.close
+        FROM tracked_tickers tt
+        JOIN ticker_dataset AS td
+            ON td.tickerid = tt.tickerid
+        WHERE tt.ticker = '{symbol}' AND td.interval = '{interval}'
+        ORDER BY td.`timestamp` ASC
+        ;
+        """
+    elif end is None and start is not None:
+        # date format: 2021-03-01 00:00:00
+        query = f"""
+        SELECT td.`timestamp`,
+            td.`interval`,
+            td.open,
+            td.high,
+            td.low,
+            td.close
+        FROM tracked_tickers tt
+            JOIN ticker_dataset AS td
+                ON td.tickerid = tt.tickerid
+            WHERE tt.ticker = 'AMZN'
+                AND td.interval = 'daily'
+                AND td.`timestamp` >= "{start}"
+            ORDER BY td.`timestamp` ASC
+        ;
+        """
     db_out = dbi.sql_select(query)
     if len(db_out) == 0:
         return None
