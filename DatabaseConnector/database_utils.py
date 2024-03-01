@@ -106,6 +106,25 @@ def get_tickers(symbol, interval, start=None, end=None):
             ORDER BY td.`timestamp` ASC
         ;
         """
+    elif end is not None and start is not None:
+        query = f"""
+        SELECT td.`timestamp`,
+            td.`interval`,
+            td.open,
+            td.high,
+            td.low,
+            td.close
+        FROM tracked_tickers tt
+            JOIN ticker_dataset AS td
+                ON td.tickerid = tt.tickerid
+            WHERE tt.ticker = 'AMZN'
+                AND td.interval = 'daily'
+                AND td.`timestamp` >= "{start}"
+                AND td.`timestamp` <= "{end}"
+            ORDER BY td.`timestamp` ASC
+        ;
+        """
+    
     db_out = dbi.sql_select(query)
     if len(db_out) == 0:
         return None
@@ -140,7 +159,6 @@ def get_latest_price_data(symbol):
     if len(db_out) == 0:
         return None
     return db_out
-
 
 
 def get_favorites():
@@ -206,4 +224,3 @@ def bulk_download(symbols, start_epoch, end_epoch, interval):
                 candle.get('close')
             )
             counter += 1
-    
