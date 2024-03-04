@@ -2,8 +2,20 @@ from flask import Flask
 from threading import Thread
 from time import sleep, time
 import sys
+import subprocess
 
 from DatabaseConnector.database_utils import *
+
+# DB config import for when we need to do direct DB ops
+DB_CONFIGS = None
+current_dir = os.path.dirname(__file__)
+config_path = os.path.join(current_dir, "DatabaseConnector/db_config.json")
+config_file = open(config_path)
+
+DB_CONFIGS = json.load(config_file)
+config_file.close()
+db_user = DB_CONFIGS['username']
+db_pass = DB_CONFIGS['password']
 
 app = Flask(__name__)
 @app.route('/')
@@ -137,11 +149,11 @@ if __name__ == "__main__":
 
 
     if '--build' in args:
-        if input("Nuke Database? This will wipe ALL price data? Y/n: ").lower() == 'y':
+        if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
             print("Droping and Rebuilding DB in 5 seconds...")
             sleep(5)
             # nuke + rebuild DB
-            raise NotImplementedError("To be implemented at a later date.")
+            subprocess.call(["mysql", f"-u{db_user}", f"-p{db_pass}", "-e ./DatabaseConnector/sql/database_setup_script.sql"])
 
         else:
             print("aborted.")
