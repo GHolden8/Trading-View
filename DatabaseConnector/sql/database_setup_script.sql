@@ -4,6 +4,7 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
+
 -- -----------------------------------------------------
 -- Schema stocktracker
 -- -----------------------------------------------------
@@ -22,7 +23,7 @@ USE `stocktracker` ;
 -- Table `stocktracker`.`tracked_tickers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `stocktracker`.`tracked_tickers` (
-  `ticker` CHAR(5) NOT NULL,
+  `ticker` VARCHAR(6) NOT NULL,
   `tickerid` INT(10) NOT NULL AUTO_INCREMENT,
   `is_favorite` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`tickerid`),
@@ -46,8 +47,8 @@ CREATE TABLE IF NOT EXISTS `stocktracker`.`ticker_dataset` (
   CONSTRAINT `fk_ticker_dataset_1`
     FOREIGN KEY (`tickerid`)
     REFERENCES `stocktracker`.`tracked_tickers` (`tickerid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
