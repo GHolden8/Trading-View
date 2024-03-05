@@ -9,6 +9,7 @@ function StockExaminer() {
     <div>
       <h1>Welcome to the StockExaminer Page!</h1>
       <button onClick={() => navigate('/')}>Go to Stock Examiner Page</button>
+      <script>stockGraph.js</script>
     </div>
   );
 }
