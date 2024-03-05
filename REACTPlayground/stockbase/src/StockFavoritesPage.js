@@ -1,14 +1,35 @@
-// StockListingPage.js
-import React from 'react';
+// StockFavoritesPage.js
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './stockFavoritesStyle.css'; // Make sure the path is correct
+import './stockFavoritesStyle.css';
 
 function StockFavoritesPage() {
   const navigate = useNavigate();
+  const [googlData, setGooglData] = useState({ latest: 'Loading...', percent_change: 'Loading...' });
+
+  useEffect(() => {
+    // Fetch the favorite stocks from the server when the component mounts
+    fetch('')
+      .then(response => response.json())
+      .then(data => {
+        // Find the GOOGL ticker in the response
+        const googlTicker = data.stocks.find(ticker => ticker.id === 'GOOGL');
+        // Update the state with the GOOGL data
+        setGooglData(googlTicker || { latest: 'Not found', percent_change: 'N/A' });
+      })
+      .catch(error => {
+        console.error('Error fetching GOOGL data:', error);
+        // Update the state to show the error
+        setGooglData({ latest: 'Error', percent_change: 'Error' });
+      });
+  }, []);
 
   return (
     <div className="stock-favorites-body">
-      <h1 className="stock-favorites-heading">Welcome to the Stock Listing Page!</h1>
+      <h1 className="stock-favorites-heading">Welcome to your Stock Favorites Page!</h1>
+      <h2>GOOGL</h2>
+      <p>Last Price: {googlData.latest}</p>
+      <p>Percent Change: {googlData.percent_change}%</p>
       <div className="stock-favorites-button-container">
         <button
           className="stock-favorites-button"
@@ -22,5 +43,7 @@ function StockFavoritesPage() {
 }
 
 export default StockFavoritesPage;
+
+
 
 
