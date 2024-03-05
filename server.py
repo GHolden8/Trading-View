@@ -76,6 +76,10 @@ def at_a_glance():
 def get_favorite_tickers():
     favorites = get_favorites()
     formatted_data = []
+
+    if(favorites == None):
+        json.dumps(None)
+
     for x in favorites:
         ticker = x[0]
         latest_price_data = get_latest_price_data(ticker)
@@ -192,6 +196,9 @@ if __name__ == "__main__":
             bulk_download(STOCKS, lastmod, time(), interval)
 
         print("Database update complete for the last week.")
+
+    if '--initfavorite' in args:
+        set_favorite("NVDA")
 
     if '--exitafter' in args:
         print("All updates complete.")
