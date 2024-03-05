@@ -6,6 +6,7 @@ import subprocess
 
 from DatabaseConnector.database_utils import *
 from DatabaseConnector.yahoo_finance.yahooFinance import modtime
+from autoupdate import autoupdate
 
 # DB config import for when we need to do direct DB ops
 DB_CONFIGS = None
@@ -162,6 +163,7 @@ if __name__ == "__main__":
 
         else:
             print("aborted.")
+            exit(1)
 
     if '--populate' in args:
         # populate with current data
@@ -185,6 +187,7 @@ if __name__ == "__main__":
         epoch_time = int(time())
         lastmod = modtime(epoch_time, "weekly")
         
+        print("Updating weekly price data...")
         for interval in INTERVAL_LIST:
             bulk_download(STOCKS, lastmod, time(), interval)
 
@@ -194,5 +197,15 @@ if __name__ == "__main__":
         print("All updates complete.")
         exit(0)
 
+    # Flask Backend Thread
+    server_args = {'host': "127.0.0.1", 'port': 8080}
+    server_thread = Thread(target=app.run, kwargs=server_args)
 
-    app.run(host='127.0.0.1', port=8080)
+    # Autoupdate thread
+    autoupdate_thread = Thread(target=autoupdate)
+
+    print("Starting server thread...")
+    server_thread.start()
+
+    print("Starting updating thread...")
+    autoupdate_thread.start()

@@ -30,7 +30,7 @@ INTERVAL_LIST = [
     'daily'
 ]
 
-if __name__ == "__main__":
+def autoupdate():
     epoch_time = int(time())
     lastmod = modtime(epoch_time, "weekly")
 
