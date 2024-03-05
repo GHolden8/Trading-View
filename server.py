@@ -5,6 +5,7 @@ import sys
 import subprocess
 
 from DatabaseConnector.database_utils import *
+from DatabaseConnector.yahoo_finance.yahooFinance import modtime
 
 # DB config import for when we need to do direct DB ops
 DB_CONFIGS = None
@@ -119,33 +120,33 @@ def success_handler():
 def failure_handler():
     return r'{"success": false}'
 
+STOCKS = [
+    'AAPL'
+    'MSFT',
+    'NVDA',
+    'GOOGL',
+    'META',
+    'BRK.B',
+    'LLY',
+    'TSLA',
+    'AVGO',
+    'V',
+    'JPM',
+    'UNH',
+    'MA',
+    'HD',
+    'AMZN',
+    'XOM'
+]
+
+INTERVAL_LIST = [
+    'daily'
+]
+
 if __name__ == "__main__":
     args = sys.argv
     for arg in args:
         arg = arg.lower()
-
-    STOCKS = [
-        'AAPL'
-        'MSFT',
-        'NVDA',
-        'GOOGL',
-        'META',
-        'BRK.B',
-        'LLY',
-        'TSLA',
-        'AVGO',
-        'V',
-        'JPM',
-        'UNH',
-        'MA',
-        'HD',
-        'AMZN',
-        'XOM'
-    ]
-
-    INTERVAL_LIST = [
-        'daily'
-    ]
 
 
     if '--build' in args:
@@ -153,11 +154,14 @@ if __name__ == "__main__":
             print("Droping and Rebuilding DB in 5 seconds...")
             sleep(5)
             # nuke + rebuild DB
-            subprocess.call(["mysql", f"-u{db_user}", f"-p{db_pass}", "-e ./DatabaseConnector/sql/database_setup_script.sql"])
+            db_script_file = open("DatabaseConnector/sql/database_setup_script.sql", 'r')
+            db_script = db_script_file.read()
+            subprocess.call(["mysql", f"-u{db_user}", f"-p{db_pass}", f"-e {db_script}"])
+            print("Buld script executed. Exiting.")
+            exit(0)
 
         else:
             print("aborted.")
-            exit(1)
 
     if '--populate' in args:
         # populate with current data
@@ -178,7 +182,17 @@ if __name__ == "__main__":
 
     if '--update' in args:
         # update db for last seven days of price data.
-        raise NotImplementedError("To be added at a later date")
+        epoch_time = int(time())
+        lastmod = modtime(epoch_time, "weekly")
+        
+        for interval in INTERVAL_LIST:
+            bulk_download(STOCKS, lastmod, time(), interval)
+
+        print("Database update complete for the last week.")
+
+    if '--exitafter' in args:
+        print("All updates complete.")
+        exit(0)
 
 
     app.run(host='127.0.0.1', port=8080)
