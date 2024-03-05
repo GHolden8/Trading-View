@@ -9,7 +9,7 @@ function StockFavoritesPage() {
 
   useEffect(() => {
     // Fetch the favorite stocks from the server when the component mounts
-    fetch('')
+    fetch('http://127.0.0.1:8080/favorites')
       .then(response => response.json())
       .then(data => {
         // Find the GOOGL ticker in the response
