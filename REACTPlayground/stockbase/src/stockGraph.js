@@ -13,10 +13,14 @@ const CandlestickChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        //const response = await fetch('touchGrass.file');   need file
-        const jsonData = await response.json();
-        const formattedData = formatData(jsonData);
-        setChartData(formattedData);
+
+        const formattedData = {
+                    datasets: [
+                         //<string:symbol> use in place of GOOGL with some variable to retrieve based on chosen
+                         http:get(http://127.0.0.1:8080/GOOGL/daily);
+                    ],
+                  };
+                  setChartData(formattedData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -25,10 +29,6 @@ const CandlestickChart = () => {
     fetchData();
   }, []);
 
-  const formatData = (data) => {
-    // I think this is current format???
-    // { datasets: [{ data: [{ t: someday, h: 100, l: 100, c: 100 }] }] } time, high, low, close?
-  };
 
   return (
     <div>
