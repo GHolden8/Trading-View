@@ -38,6 +38,7 @@ if __name__ == "__main__":
         print("Initiating daily stock update...")
         for interval in INTERVAL_LIST:
             bulk_download(STOCKS, lastmod, time(), interval)
+        print("Daily stock update complete. Waiting for next day.")
 
         lastmod = int(time()) + 86400 # Last day plus one day
         sleep(lastmod - int(time()))
