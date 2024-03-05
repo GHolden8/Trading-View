@@ -78,7 +78,7 @@ def get_favorite_tickers():
     formatted_data = []
 
     if(favorites == None):
-        json.dumps(None)
+        return json.dumps(None)
 
     for x in favorites:
         ticker = x[0]
