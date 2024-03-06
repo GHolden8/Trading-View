@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-var tempData = "";
+//var tempData = "";
 
 /*
 JSON DATA ORDER:
@@ -15,7 +15,7 @@ JSON DATA ORDER:
 
 */
 
-function getBackendArray(){
+function  getBackendArray(){
   fetch('http://127.0.0.1:8080/GOOGL/daily', {
     method: 'GET',
     headers: {
@@ -26,23 +26,29 @@ function getBackendArray(){
     if (response.ok) {
       response.json().then(retArray => {
         console.log(retArray);
-        tempData = retArray.data[0][0];
+        return "retArray";
       });
     }
   });
 }
 
+function myfunc(){
+  return Math.PI;
+}
+
 
 function HomePage() {
   const navigate = useNavigate();
-  getBackendArray();    
+  var tempData = "ligma";
+  const googArray = getBackendArray();
+  //const entry = googArray.data[0][0];
         
   return (
     <div>
       <h1>Welcome to the Home Page!</h1>
       <button onClick={() => navigate('/stockfavorites')}>Go to Stock Favorites Page</button>
       <button onClick={() => navigate('/stockexaminer')}>Go to Stock Page</button>
-      <h1>The most recent Google share price is: {tempData}</h1>
+      <h1>The most recent Google share price is: {googArray}</h1>
     </div>
   );
 }
