@@ -37,4 +37,4 @@ python3 -m pip install -r requirements.txt
 echo "Requirements installed. Populating database..."
 python3 server.py --populate --exitafter
 
-echo "\nBuild script complete. Run server.py to start the server."
+echo "Build script complete. Run server.py to start the server."
