@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from threading import Thread
 from time import sleep, time
