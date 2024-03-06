@@ -161,12 +161,12 @@ if __name__ == "__main__":
         arg = arg.lower()
 
     # CORS Hotfix
-    CORS(app)
-    cors = CORS(app, resource={
-        r"/favorites":{
-            "origins":"*"
-        }
-    })
+    # CORS(app)
+    # cors = CORS(app, resource={
+    #     r"/*":{
+    #         "origins":"*"
+    #     }
+    # })
 
     if '--build' in args:
         if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
@@ -217,8 +217,15 @@ if __name__ == "__main__":
         print("All updates complete.")
         exit(0)
 
-    print("Starting updating task...")
-    subprocess.run("python3 autoupdate.py", shell=True)
+    # Flask Backend Thread
+    server_args = {'host': "127.0.0.1", 'port': 8080}
+    server_thread = Thread(target=app.run, kwargs=server_args)
 
-    print("Starting server...")
-    app.run(host="127.0.0.1", port=8080)
+    # Autoupdate thread
+    autoupdate_thread = Thread(target=autoupdate)
+
+    print("Starting server thread...")
+    server_thread.start()
+
+    print("Starting updating thread...")
+    autoupdate_thread.start()
