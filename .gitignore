@@ -1,2 +1,3 @@
 config/db_info.cfg
 **/__pycache__/
+*/package-lock.json
