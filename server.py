@@ -2,10 +2,13 @@ from flask import Flask
 from threading import Thread
 from time import sleep, time
 import sys
+from flask import Flask #new
+from flask_cors import CORS #new
 
 from DatabaseConnector.database_utils import *
 
 app = Flask(__name__)
+CORS(app, resources={r"/favorites": {"origins": "http://localhost:3001"}}) #new
 @app.route('/')
 def root():
     return "Hello I am a server, pass me the flask."
