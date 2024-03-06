@@ -156,12 +156,12 @@ if __name__ == "__main__":
         arg = arg.lower()
 
     # CORS Hotfix
-    # CORS(app)
-    # cors = CORS(app, resource={
-    #     r"/*":{
-    #         "origins":"*"
-    #     }
-    # })
+    CORS(app)
+    cors = CORS(app, resource={
+         r"/*":{
+             "origins":"*"
+         }
+     })
 
     if '--build' in args:
         if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
@@ -213,14 +213,15 @@ if __name__ == "__main__":
         exit(0)
 
     # Flask Backend Thread
-    server_args = {'host': "127.0.0.1", 'port': 8080}
-    server_thread = Thread(target=app.run, kwargs=server_args)
+    #server_args = {'host': "127.0.0.1", 'port': 8080}
+    #server_thread = Thread(target=app.run, kwargs=server_args)
 
     # Autoupdate thread
-    autoupdate_thread = Thread(target=autoupdate)
+    #autoupdate_thread = Thread(target=autoupdate)
 
-    print("Starting server thread...")
-    server_thread.start()
+    #print("Starting server thread...")
+    #server_thread.start()
+    app.run(host="127.0.0.1", port=8080)
 
-    print("Starting updating thread...")
-    autoupdate_thread.start()
+    #print("Starting updating thread...")
+    #autoupdate_thread.start()
