@@ -19,8 +19,22 @@ JSON=$(cat "$JSONFILE")
 USER=$(extract_json_value "$JSON" "username")
 PASS=$(extract_json_value "$JSON" "password")
 
-sudo /etc/init.d/mysql start
-sudo mysql -u$USER -p$PASS -e "$(cat $(find -name database_setup_script.sql))"
+curdir=$PWD
+cd ./REACTPlayground/stockbase
 
+npm install
+npm run build
+
+cd $curdir
+
+sudo /etc/init.d/mysql start
+echo "Setting up database..."
+sudo mysql -u$USER -p$PASS -e "source $(find -name database_setup_script.sql)"
+
+
+echo "Database setup complete. Starting pip install..."
 python3 -m pip install -r requirements.txt
-python3 server.py --populate
+echo "Requirements installed. Populating database..."
+python3 server.py --populate --exitafter
+
+echo "\nBuild script complete. Run server.py to start the server."

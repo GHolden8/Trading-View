@@ -210,7 +210,12 @@ def remove_favorite(symbol):
 def bulk_download(symbols, start_epoch, end_epoch, interval):
     ''' Bulk Download a list of Symbols '''
     for symbol in symbols:
-        data = retrieve_data(symbol, start_epoch, end_epoch, interval)
+        data = None
+        try:
+            data = retrieve_data(symbol, start_epoch, end_epoch, interval)
+        except Exception:
+            print("Connection error while retrieving stock:", symbol, "\nCheck connection.")
+            continue
         counter = 0
         for candle in data:
             print(symbol, "Percent Complete:", '%2f' % (counter/len(data)*100.0))

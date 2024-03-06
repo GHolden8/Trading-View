@@ -181,7 +181,6 @@ if __name__ == "__main__":
                 # timestamp of 1267079403 is twelve years ago.
                 bulk_download(STOCKS, 1267079403, time(), interval)
 
-
         else:
             print("aborted.")
             exit(1)
