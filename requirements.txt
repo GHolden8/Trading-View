@@ -2,3 +2,4 @@ requests
 mysql-connector-python
 flask
 alpha_vantage
+flask_cors

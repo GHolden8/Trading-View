@@ -1,14 +1,13 @@
 '''This module runs the fetching unit test. It tests the get_tickers function from the database_utils module.'''
 
+import datetime
+import decimal
 import json
 import os
-import re
 import unittest
 
-import mysql.connector as m
 
-from DatabaseConnector.database_utils import get_tickers
-from DatabaseConnector.av_api.av_database_update import av_database_update
+from DatabaseConnector.database_utils import bulk_download, get_tickers, insert_ticker
 
 # Grab our API key from secrets
 try:
@@ -29,38 +28,31 @@ config_file.close()
 db_user = DB_CONFIGS['username']
 db_pass = DB_CONFIGS['password']
 
-
-def init_db():
-    config_path = os.path.join(current_dir, "DatabaseConnector", "sql",\
-                                "database_setup_script.sql")
-    # Connect to the database
-    with m.connect(
-            host="localhost",
-            user=db_user,
-            password=db_pass
-        ) as connection:
-        cursor = connection.cursor()
-        statement = ""
-        with open(config_path, 'r') as file:
-            for line in file:
-                if line.strip().startswith('--'):  # ignore sql comment lines
-                    continue
-                if not line.strip().endswith(';'):  # keep appending lines that don't end in ';'
-                    statement = statement + line
-                else:  # when you get a line ending in ';' then exec statement and reset for next statement
-                    statement = statement + line
-                    #print "\n\n[DEBUG] Executing SQL statement:\n%s" % (statement)
-                    cursor.execute(statement)
-                    statement = ""
-
 class fetch_sql_test(unittest.TestCase):
     def test_fetch_sql(self):
-        init_db()
         with open('tests/av_test_data.json', 'r') as file:
             test_data = json.load(file)
-            av_database_update('TIME_SERIES_DAILY', True, 'AAPL')
+            insert_ticker('AAPL')
+            bulk_download({'AAPL'}, 1672531200, 1675209600, 'daily')
             test_json = get_tickers('AAPL', 'daily')
-            self.assertEqual(test_data, test_json)
+            # Compare the two jsons by row, excluding the tickerid
+
+            i = 0
+            initial_date = datetime.datetime(2023, 1, 3)
+            while test_json[i][0] < initial_date:
+                i += 1
+            for row in test_data:
+                rowtime = datetime.datetime.strptime(row, "%Y-%m-%d")
+                self.assertEqual(rowtime, test_json[i][0])
+                self.assertEqual(round(decimal.Decimal\
+                    (test_data[row]["1. open"]), 2), test_json[i][2])
+                self.assertEqual(round(decimal.Decimal\
+                    (test_data[row]["2. high"]), 2), test_json[i][3])
+                self.assertEqual(round(decimal.Decimal\
+                    (test_data[row]["3. low"]), 2), test_json[i][4])
+                self.assertEqual(round(decimal.Decimal\
+                    (test_data[row]["4. close"]), 2), test_json[i][5])
+                i+=1
 
 if __name__ == "__main__":
     unittest.main()
