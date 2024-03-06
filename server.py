@@ -156,12 +156,12 @@ if __name__ == "__main__":
         arg = arg.lower()
 
     # CORS Hotfix
-    CORS(app)
-    cors = CORS(app, resource={
-        r"/*":{
-            "origins":"*"
-        }
-    })
+    # CORS(app)
+    # cors = CORS(app, resource={
+    #     r"/*":{
+    #         "origins":"*"
+    #     }
+    # })
 
     if '--build' in args:
         if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
