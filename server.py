@@ -1,9 +1,24 @@
-from flask import Flask
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from threading import Thread
 from time import sleep, time
 import sys
+import subprocess
 
 from DatabaseConnector.database_utils import *
+from DatabaseConnector.yahoo_finance.yahooFinance import modtime
+from autoupdate import autoupdate
+
+# DB config import for when we need to do direct DB ops
+DB_CONFIGS = None
+current_dir = os.path.dirname(__file__)
+config_path = os.path.join(current_dir, "DatabaseConnector/db_config.json")
+config_file = open(config_path)
+
+DB_CONFIGS = json.load(config_file)
+config_file.close()
+db_user = DB_CONFIGS['username']
+db_pass = DB_CONFIGS['password']
 
 app = Flask(__name__)
 @app.route('/')
@@ -27,14 +42,12 @@ def get_data(symbol, interval):
     }
     return response
 
-@app.route('/favorites')
-def get_favorite_tickers():
-    favorites = get_favorites()
+@app.route('/nonfavorites')
+def at_a_glance():
     formatted_data = []
-    for x in favorites:
+    for x in get_non_favorites():
         ticker = x[0]
         latest_price_data = get_latest_price_data(ticker)
-        print(latest_price_data)
         last_price = float(latest_price_data[0][1])
         current_price = float(latest_price_data[1][1])
         
@@ -60,6 +73,43 @@ def get_favorite_tickers():
     }
     return json.dumps(response)
 
+@app.route('/favorites')
+def get_favorite_tickers():
+    favorites = get_favorites()
+    formatted_data = []
+
+    if(favorites == None):
+        return json.dumps(None)
+
+    for x in favorites:
+        ticker = x[0]
+        latest_price_data = get_latest_price_data(ticker)
+        last_price = float(latest_price_data[0][1])
+        current_price = float(latest_price_data[1][1])
+        
+        if last_price >= current_price: # change negative
+            decrease = last_price - current_price
+            change = -float(decrease/last_price)
+        else: # change positive
+            increase = current_price - last_price
+            change = float(increase/last_price)
+        
+        change *= 100.0
+
+        formatted_data.append(
+            {
+                "id": ticker,
+                "latest": current_price,
+                "percent_change": "%.2f" % change
+            }
+        )
+
+    response = {
+        "stocks": formatted_data
+    }
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return json.dumps(response)
+
 @app.route('/addfavorite/<string:symbol>')
 def add_favorite(symbol):
     set_favorite(symbol)
@@ -77,41 +127,52 @@ def success_handler():
 def failure_handler():
     return r'{"success": false}'
 
+STOCKS = [
+    'AAPL'
+    'MSFT',
+    'NVDA',
+    'GOOGL',
+    'META',
+    'BRK.B',
+    'LLY',
+    'TSLA',
+    'AVGO',
+    'V',
+    'JPM',
+    'UNH',
+    'MA',
+    'HD',
+    'AMZN',
+    'XOM'
+]
+
+INTERVAL_LIST = [
+    'daily'
+]
+
 if __name__ == "__main__":
     args = sys.argv
     for arg in args:
         arg = arg.lower()
 
-    STOCKS = [
-        'AAPL'
-        'MSFT',
-        'NVDA',
-        'GOOGL',
-        'META',
-        'BRK.B',
-        'LLY',
-        'TSLA',
-        'AVGO',
-        'V',
-        'JPM',
-        'UNH',
-        'MA',
-        'HD',
-        'AMZN',
-        'XOM'
-    ]
-
-    INTERVAL_LIST = [
-        'daily'
-    ]
-
+    # CORS Hotfix
+    # CORS(app)
+    # cors = CORS(app, resource={
+    #     r"/*":{
+    #         "origins":"*"
+    #     }
+    # })
 
     if '--build' in args:
-        if input("Nuke Database? This will wipe ALL price data? Y/n: ").lower() == 'y':
+        if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
             print("Droping and Rebuilding DB in 5 seconds...")
             sleep(5)
             # nuke + rebuild DB
-            raise NotImplementedError("To be implemented at a later date.")
+            db_script_file = open("DatabaseConnector/sql/database_setup_script.sql", 'r')
+            db_script = db_script_file.read()
+            subprocess.call(["mysql", f"-u{db_user}", f"-p{db_pass}", f"-e {db_script}"])
+            print("Buld script executed. Exiting.")
+            exit(0)
 
         else:
             print("aborted.")
@@ -129,14 +190,37 @@ if __name__ == "__main__":
                 # timestamp of 1267079403 is twelve years ago.
                 bulk_download(STOCKS, 1267079403, time(), interval)
 
-
         else:
             print("aborted.")
             exit(1)
 
     if '--update' in args:
         # update db for last seven days of price data.
-        raise NotImplementedError("To be added at a later date")
+        epoch_time = int(time())
+        lastmod = modtime(epoch_time, "weekly")
+        
+        print("Updating weekly price data...")
+        for interval in INTERVAL_LIST:
+            bulk_download(STOCKS, lastmod, time(), interval)
 
+        print("Database update complete for the last week.")
 
-    app.run(host='127.0.0.1', port=8080)
+    if '--initfavorite' in args:
+        set_favorite("NVDA")
+
+    if '--exitafter' in args:
+        print("All updates complete.")
+        exit(0)
+
+    # Flask Backend Thread
+    server_args = {'host': "127.0.0.1", 'port': 8080}
+    server_thread = Thread(target=app.run, kwargs=server_args)
+
+    # Autoupdate thread
+    autoupdate_thread = Thread(target=autoupdate)
+
+    print("Starting server thread...")
+    server_thread.start()
+
+    print("Starting updating thread...")
+    autoupdate_thread.start()

@@ -1,40 +1,86 @@
-
-// Takes Json input to create candle graph
-import React, { useEffect, useState } from 'react';
-// candle stick graph function and import
-//may need npm install for chart2 to run
-import React from 'react';
-import { Line } from 'react-chartjs-2';
+import React, { useEffect } from 'react';
+import ApexCharts from 'apexcharts';
 
 const CandlestickChart = () => {
-  const [chartData, setChartData] = useState({});
-
-//should get data from file
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        const data = result.map(item => ({
+          x: new Date(item[0]),
+          y: [parseFloat(item[1]), parseFloat(item[2]), parseFloat(item[3]), parseFloat(item[4])]
+        }));
 
-        const formattedData = {
-                    datasets: [
-                         //<string:symbol> use in place of GOOGL with some variable to retrieve based on chosen
-                         http:get(http://127.0.0.1:8080/GOOGL/daily);
-                    ],
-                  };
-                  setChartData(formattedData);
+        const options = {
+          series: [{
+            name: 'candle',
+            data: data
+          }],
+          chart: {
+            height: 350,
+            type: 'candlestick',
+          },
+          title: {
+            text: 'CandleStick Chart - Category X-axis',
+            align: 'left'
+          },
+          annotations: {
+            xaxis: [
+              {
+                x: 'day',
+                borderColor: '#00E396',
+                label: {
+                  borderColor: '#00E396',
+                  style: {
+                    fontSize: '12px',
+                    color: '#fff',
+                    background: '#00E396'
+                  },
+                  orientation: 'horizontal',
+                  offsetY: 7,
+                  text: 'Annotation Test'
+                }
+              }
+            ]
+          },
+          tooltip: {
+            enabled: true,
+          },
+          xaxis: {
+            type: 'category',
+            labels: {
+              formatter: function (val) {
+                return new Date(val).toLocaleString('en-US', { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+              }
+            }
+          },
+          yaxis: {
+            tooltip: {
+              enabled: true
+            }
+          }
+        };
+
+        const chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+
+        return () => {
+          chart.destroy(); // Destroy the chart when the component unmounts
+        };
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, []);
-
+  }, []); // Empty dependency array ensures useEffect runs only once on component mount
 
   return (
-    <div>
-      //<h2>*Name of current company*</h2> heading if needed can pull company_name if in database otherwise html header in stock is fine
-      <Line data={chartData} />
-    </div>
+    <div id="chart" />
   );
 };
 

@@ -1,18 +1,20 @@
-// StockExaminer.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CandlestickChart from './stockGraph'
 
 function StockExaminer() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+  }, []);
+
   return (
     <div>
       <h1>Welcome to the StockExaminer Page!</h1>
-      <button onClick={() => navigate('/')}>Go to Stock Examiner Page</button>
-      <script>stockGraph.js</script>
+      <CandlestickChart/>
+      <button onClick={() => navigate('/')}>Home</button>
     </div>
   );
 }
 
 export default StockExaminer;
-
