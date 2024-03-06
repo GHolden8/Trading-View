@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+<
+<header>
+Header set Access-Control-Allow-Origin: 'https://example.com'
 
+</header>
 function StockExaminer() {
   const navigate = useNavigate();
 
