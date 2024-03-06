@@ -3,6 +3,8 @@ from flask_cors import CORS
 from threading import Thread
 from time import sleep, time
 import sys
+from flask import Flask #new
+from flask_cors import CORS #new
 
 from DatabaseConnector.database_utils import *
 from DatabaseConnector.yahoo_finance.yahooFinance import modtime
@@ -20,6 +22,7 @@ db_user = DB_CONFIGS['username']
 db_pass = DB_CONFIGS['password']
 
 app = Flask(__name__)
+
 CORS(app, resources={r"/favorites": {"origins": "http://localhost:3001"}}) #new
 @app.route('/')
 def root():

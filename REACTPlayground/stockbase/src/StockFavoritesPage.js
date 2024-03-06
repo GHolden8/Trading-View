@@ -9,7 +9,7 @@ function StockFavoritesPage() {
 
   useEffect(() => {
     // Fetch the favorite stocks from the server when the component mounts
-    fetch('http://127.0.0.1:8080/favorites')
+    fetch('http://localhost:8080/favorites')
       .then(response => response.json())
       .then(data => {
         console.log(data);
