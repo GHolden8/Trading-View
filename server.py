@@ -110,7 +110,9 @@ def get_favorite_tickers():
     response = {
         "stocks": formatted_data
     }
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
     return json.dumps(response)
 
 @app.route('/addfavorite/<string:symbol>')
@@ -159,12 +161,12 @@ if __name__ == "__main__":
         arg = arg.lower()
 
     # CORS Hotfix
-    # CORS(app)
-    # cors = CORS(app, resource={
-    #     r"/*":{
-    #         "origins":"*"
-    #     }
-    # })
+    CORS(app)
+    cors = CORS(app, resource={
+        r"/favorites":{
+            "origins":"*"
+        }
+    })
 
     if '--build' in args:
         if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
@@ -215,15 +217,8 @@ if __name__ == "__main__":
         print("All updates complete.")
         exit(0)
 
-    # Flask Backend Thread
-    server_args = {'host': "127.0.0.1", 'port': 8080}
-    server_thread = Thread(target=app.run, kwargs=server_args)
+    print("Starting updating task...")
+    subprocess.run("python3 autoupdate.py", shell=True)
 
-    # Autoupdate thread
-    autoupdate_thread = Thread(target=autoupdate)
-
-    print("Starting server thread...")
-    server_thread.start()
-
-    print("Starting updating thread...")
-    autoupdate_thread.start()
+    print("Starting server...")
+    app.run(host="127.0.0.1", port=8080)
