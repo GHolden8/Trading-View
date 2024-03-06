@@ -1,3 +1,4 @@
+''' Exceptions for the AV API Interface '''
 class InvalidFunctionException(Exception):
     '''Exception raised when an invalid API function is detected'''
     def __init__(self, msg) -> None:

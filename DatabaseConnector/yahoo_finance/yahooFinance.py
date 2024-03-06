@@ -1,14 +1,17 @@
-import requests
-import datetime
+''' The Yahoo Finance API. Pulls data from YFs page in CSV format '''
 
 from time import sleep
 import random
+import datetime
 
-from DatabaseConnector.yahoo_finance import yahooException
+import requests
+
+from DatabaseConnector.yahoo_finance.yahooException import YahooException
 # dissecting the request for CSV tabular output is the following:
 # the request is rather simple...
 ENDPOINT = "https://query1.finance.yahoo.com/v7/finance/download"
-# ENDPOINT = "https://query1.finance.yahoo.com/v7/finance/download/AAPL?period1=345427200&period2=1707955200&interval=1d&events=history&includeAdjustedClose=true"
+# ENDPOINT = """https://query1.finance.yahoo.com/v7/finance/download/
+# AAPL?period1=345427200&period2=1707955200&interval=1d&events=history&includeAdjustedClose=true"""
 
 INTERVALS = {
     "1min": "N/A",
@@ -31,11 +34,12 @@ def modtime(epoch, interval):
     try:
         return epoch - ( epoch % second_intervals.get(interval))
     except KeyError:
-        raise yahooException("Warning: Invalid Yahoo API Interval.")
+        raise YahooException("Warning: Invalid Yahoo API Interval.")
 
 def retrieve_data(asset, start_epoch, end_epoch, interval):
     '''Yahoo Finance Data acquisition. Only 'daily' 'weekly' and 'monthly' data supported.'''
-    # the two data interfaces use a different interval type, which means it must be translated to their native version.
+    # the two data interfaces use a different interval type, which means it must be translated
+    # to their native version.
     # modify headers to mimic a browser -- this is a dirty trick...
     headers = {
         "User-Agent": "Pretty Please? 1.69"
@@ -46,9 +50,9 @@ def retrieve_data(asset, start_epoch, end_epoch, interval):
     # setting interval to Yahoo Finance Applicable intervals
     interval = INTERVALS.get(interval)
     if interval == "N/A":
-        raise yahooException("Warning: Invalid Yahoo API Interval.")
+        raise YahooException("Warning: Invalid Yahoo API Interval.")
     uri = f"{ENDPOINT}/{asset}?period1={int(start_epoch)}&period2={int(end_epoch)}&interval={interval}&events=history&includeAdjustedClose=true"
-    
+
     # print(uri)
 
     data = requests.get(uri, headers=headers).text
