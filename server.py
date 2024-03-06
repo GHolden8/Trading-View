@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from threading import Thread
 from time import sleep, time
@@ -107,7 +107,9 @@ def get_favorite_tickers():
     response = {
         "stocks": formatted_data
     }
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
     return json.dumps(response)
 
 @app.route('/addfavorite/<string:symbol>')
@@ -156,12 +158,12 @@ if __name__ == "__main__":
         arg = arg.lower()
 
     # CORS Hotfix
-    # CORS(app)
-    # cors = CORS(app, resource={
-    #     r"/*":{
-    #         "origins":"*"
-    #     }
-    # })
+    CORS(app)
+    cors = CORS(app, resource={
+        r"/*":{
+            "origins":"*"
+        }
+    })
 
     if '--build' in args:
         if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
