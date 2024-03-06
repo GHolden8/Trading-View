@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request, jsonify, make_request
+from flask_cors import CORS
 from threading import Thread
 from time import sleep, time
 import sys
@@ -153,6 +154,8 @@ if __name__ == "__main__":
     for arg in args:
         arg = arg.lower()
 
+    # CORS Hotfix
+    CORS(app)
 
     if '--build' in args:
         if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
