@@ -5,12 +5,14 @@ const CandlestickChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily');
+        const response = fetch('http://127.0.0.1:8080/GOOGL/daily', {
+        mode:'no-cors'
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const result = await response.json();
-        const data = result.map(item => ({
+        const info = result.map(item => ({
           x: new Date(item[0]),
           y: [parseFloat(item[1]), parseFloat(item[2]), parseFloat(item[3]), parseFloat(item[4])]
         }));
@@ -18,14 +20,14 @@ const CandlestickChart = () => {
         const options = {
           series: [{
             name: 'candle',
-            data: data
+            data: info
           }],
           chart: {
             height: 350,
             type: 'candlestick',
           },
           title: {
-            text: 'CandleStick Chart - Category X-axis',
+            text: 'CandleStick Chart',
             align: 'left'
           },
           annotations: {
@@ -42,7 +44,7 @@ const CandlestickChart = () => {
                   },
                   orientation: 'horizontal',
                   offsetY: 7,
-                  text: 'Annotation Test'
+                  text: 'Test'
                 }
               }
             ]
