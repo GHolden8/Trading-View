@@ -12,7 +12,7 @@ const CandlestickChart = () => {
           throw new Error('Network response was not ok');
         }
         const result = await response.json();
-        const data = result.map(item => ({
+        const info = result.map(item => ({
           x: new Date(item[0]),
           y: [parseFloat(item[1]), parseFloat(item[2]), parseFloat(item[3]), parseFloat(item[4])]
         }));
@@ -20,14 +20,14 @@ const CandlestickChart = () => {
         const options = {
           series: [{
             name: 'candle',
-            data: data
+            data: info
           }],
           chart: {
             height: 350,
             type: 'candlestick',
           },
           title: {
-            text: 'CandleStick Chart - Category X-axis',
+            text: 'CandleStick Chart',
             align: 'left'
           },
           annotations: {
@@ -44,7 +44,7 @@ const CandlestickChart = () => {
                   },
                   orientation: 'horizontal',
                   offsetY: 7,
-                  text: 'Annotation Test'
+                  text: 'Test'
                 }
               }
             ]
