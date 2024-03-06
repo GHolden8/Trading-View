@@ -13,11 +13,16 @@ const CandlestickChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
+      const response = await fetch('http://127.0.0.1:8080/GOOGL/daily');
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+           }
+            // Parse the JSON response
+            const result = await response.json();
         const formattedData = {
                     datasets: [
                          //<string:symbol> use in place of GOOGL with some variable to retrieve based on chosen
-                         http:get(http://127.0.0.1:8080/GOOGL/daily);
+
                     ],
                   };
                   setChartData(formattedData);
@@ -32,7 +37,7 @@ const CandlestickChart = () => {
 
   return (
     <div>
-      //<h2>*Name of current company*</h2> heading if needed can pull company_name if in database otherwise html header in stock is fine
+      <h2>*Name of current company*</h2> //heading if needed can pull company_name if in database otherwise html header in stock is fine
       <Line data={chartData} />
     </div>
   );
