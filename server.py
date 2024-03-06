@@ -160,7 +160,7 @@ if __name__ == "__main__":
     # CORS Hotfix
     CORS(app)
     cors = CORS(app, resource={
-        r"/*":{
+        r"/favorites":{
             "origins":"*"
         }
     })
