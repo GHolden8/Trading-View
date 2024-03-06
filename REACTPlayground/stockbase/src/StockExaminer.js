@@ -1,23 +1,17 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CandlestickChart from './stockGraph'
 
 function StockExaminer() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = './stockGraph.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
   }, []);
 
   return (
     <div>
       <h1>Welcome to the StockExaminer Page!</h1>
+      <CandlestickChart/>
       <button onClick={() => navigate('/')}>Home</button>
     </div>
   );
