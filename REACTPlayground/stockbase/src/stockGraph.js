@@ -5,7 +5,9 @@ const CandlestickChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily');
+        const response = fetch('http://127.0.0.1:8080/GOOGL/daily', {
+        mode:'no-cors'
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
