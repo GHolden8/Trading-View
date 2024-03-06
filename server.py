@@ -107,6 +107,7 @@ def get_favorite_tickers():
     response = {
         "stocks": formatted_data
     }
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return json.dumps(response)
 
 @app.route('/addfavorite/<string:symbol>')
