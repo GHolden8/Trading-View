@@ -114,10 +114,10 @@ def get_favorite_tickers():
     response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
     return json.dumps(response)
 
-@app.route('/addfavorite/<string:symbol>')
+@app.route('/addfavorite/<string:symbol>', methods=['POST']) #new post
 def add_favorite(symbol):
     set_favorite(symbol)
-    return success_handler()
+    return jsonify({"success": True, "message": f"{ticker_symbol} set as favorite"}) #new
 
 @app.route('/delfavorite/<string:symbol>')
 def delete_favorite(symbol):

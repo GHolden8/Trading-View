@@ -7,28 +7,54 @@ function StockFavoritesPage() {
   const [serverResponse, setServerResponse] = useState('Loading...');
 
   useEffect(() => {
-    fetch('http://localhost:8080/favorites') // Update with the correct server URL if needed
-      .then(response => {
-        if (!response.ok) {
-          console.error('Server response status:', response.status);
-          throw new Error(`Network response was not ok, status: ${response.status}`);
-        }
-        return response.text(); // We use text() to get raw response
-      })
-      .then(rawData => {
-        console.log('Raw data:', rawData); // Log the raw data to see what it looks like
-        if (rawData === 'null') {
-          throw new Error('Received null from server');
-        }
-        // Set the raw data into the serverResponse state
-        setServerResponse(rawData || 'No data received');
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-        setServerResponse(`Error: ${error.message}`);
-      });
+    // Function to add GOOGL as a favorite
+    const addGOOGLAsFavorite = () => {
+      fetch('http://localhost:8080/addfavorite/GOOGL', { method: 'POST' })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to set GOOGL as favorite, status: ${response.status}`);
+          }
+          return response.json(); // Assuming the response will be in JSON
+        })
+        .then(data => {
+          if (data.success) {
+            console.log(data.message); // Confirming in the console that GOOGL was added
+            // After adding to favorites, fetch the list of favorites
+            fetchFavorites();
+          } else {
+            throw new Error('Failed to add GOOGL to favorites');
+          }
+        })
+        .catch(error => {
+          console.error('Error adding GOOGL to favorites:', error);
+          setServerResponse(`Error: ${error.message}`);
+        });
+    };
+
+    // Function to fetch favorites
+    const fetchFavorites = () => {
+      fetch('http://localhost:8080/favorites')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch favorites, status: ${response.status}`);
+          }
+          return response.text();
+        })
+        .then(rawData => {
+          if (rawData === 'null') {
+            throw new Error('Received null from server');
+          }
+          setServerResponse(rawData || 'No favorites data received');
+        })
+        .catch(error => {
+          console.error('Error fetching favorites data:', error);
+          setServerResponse(`Error: ${error.message}`);
+        });
+    };
+
+    // Initially add GOOGL as a favorite
+    addGOOGLAsFavorite();
   }, []);
-  
 
   return (
     <div className="stock-favorites-body">
@@ -48,6 +74,7 @@ function StockFavoritesPage() {
 }
 
 export default StockFavoritesPage;
+
 
 
 
