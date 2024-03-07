@@ -5,7 +5,7 @@ from time import sleep, time
 import sys
 from flask import Flask #new
 from flask_cors import CORS #new
-import subprocess
+
 from DatabaseConnector.database_utils import *
 from DatabaseConnector.yahoo_finance.yahooFinance import modtime
 from autoupdate import autoupdate
@@ -31,44 +31,6 @@ def root():
 @app.route('/<string:symbol>/<string:interval>')
 def get_data(symbol, interval):
     data = get_tickers(symbol, interval)
-
-    formatted_data = []
-    for x in data:
-        formatted_data.append(
-            list(x)
-        )
-
-    response = {
-        'symbol': symbol,
-        'interval': interval,
-        'data': data
-    }
-    return response
-
-@app.route('/<string:symbol>/<string:interval>/<int:days>')
-def get_window(symbol, interval, days):
-    some_days_ago = datetime.datetime.now() - datetime.timedelta(days)
-    data = get_tickers(symbol, interval, some_days_ago)
-
-    formatted_data = []
-    for x in data:
-        formatted_data.append(
-            list(x)
-        )
-
-    response = {
-        'symbol': symbol,
-        'interval': interval,
-        'data': data
-    }
-    return response
-
-@app.route('/<string:symbol>/<string:interval>/<string:startdate>/<string:enddate>')
-def get_adv_window(symbol, interval, startdate, enddate):
-    startdate = datetime.datetime.strptime(startdate, "%Y-%m-%d")
-    enddate = datetime.datetime.strptime(enddate, "%Y-%m-%d")
-
-    data = get_tickers(symbol, interval, startdate, enddate)
 
     formatted_data = []
     for x in data:
