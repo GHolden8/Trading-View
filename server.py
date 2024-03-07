@@ -42,6 +42,24 @@ def get_data(symbol, interval):
     }
     return response
 
+@app.route('/<int:days>/<string:symbol>/<string:interval>')
+def get_window(days, symbol, interval):
+    some_days_ago = datetime.datetime.now() - datetime.timedelta(days)
+    data = get_tickers(symbol, interval, some_days_ago)
+
+    formatted_data = []
+    for x in data:
+        formatted_data.append(
+            list(x)
+        )
+
+    response = {
+        'symbol': symbol,
+        'interval': interval,
+        'data': data
+    }
+    return response
+
 @app.route('/nonfavorites')
 def at_a_glance():
     formatted_data = []
