@@ -5,6 +5,8 @@ from time import sleep, time
 import sys
 from flask import Flask #new
 from flask_cors import CORS #new
+from flask import make_response #new
+
 
 from DatabaseConnector.database_utils import *
 from DatabaseConnector.yahoo_finance.yahooFinance import modtime
@@ -106,18 +108,22 @@ def get_favorite_tickers():
             }
         )
 
-    response = {
-        "stocks": formatted_data
-    }
+    #response = {
+        #"stocks": formatted_data
+    #}
+    response = jsonify({"stocks": formatted_data})
     response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
-    return json.dumps(response)
+    #response = make_response(json.dumps({"stocks": formatted_data})) #new
+    #response.headers.add("Access-Control-Allow-Origin", "*")
+    #response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    #response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
+    #return json.dumps(response)
+    return response
 
 @app.route('/addfavorite/<string:symbol>', methods=['POST']) #new post
 def add_favorite(symbol):
     set_favorite(symbol)
-    return jsonify({"success": True, "message": f"{ticker_symbol} set as favorite"}) #new
+    return jsonify({"success": True, "message": f"{symbol} set as favorite"}) #new
 
 @app.route('/delfavorite/<string:symbol>')
 def delete_favorite(symbol):
