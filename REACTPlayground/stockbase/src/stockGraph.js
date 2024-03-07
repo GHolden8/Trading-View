@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
 
@@ -5,17 +6,21 @@ const CandlestickChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = fetch('http://127.0.0.1:8080/GOOGL/daily', {
-        mode:'no-cors'
-        });
+        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+        //store the json in result after checking is done
         const result = await response.json();
-        const info = result.map(item => ({
-          x: new Date(item[0]),
-          y: [parseFloat(item[1]), parseFloat(item[2]), parseFloat(item[3]), parseFloat(item[4])]
-        }));
+        console.log(result);
+        // takes data from json and maps
+        const mapCandlestickData = (result) => ({
+          x: new Date(result[0]),
+          y: [parseFloat(result[2]), parseFloat(result[3]), parseFloat(result[4]), parseFloat(result[5])]
+        });
+
+        const info = result.data.map(mapCandlestickData);
+
 
         const options = {
           series: [{
@@ -77,9 +82,8 @@ const CandlestickChart = () => {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchData();
-  }, []); // Empty dependency array ensures useEffect runs only once on component mount
+  }, []); 
 
   return (
     <div id="chart" />

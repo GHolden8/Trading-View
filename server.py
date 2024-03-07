@@ -3,8 +3,8 @@ from flask_cors import CORS
 from threading import Thread
 from time import sleep, time
 import sys
-from flask import Flask #new
-from flask_cors import CORS #new
+from flask import make_response #needed for retrieval of favorites
+
 
 from DatabaseConnector.database_utils import *
 from DatabaseConnector.yahoo_finance.yahooFinance import modtime
@@ -23,7 +23,6 @@ db_pass = DB_CONFIGS['password']
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/favorites": {"origins": "http://localhost:3002"}}) #new
 @app.route('/')
 def root():
     return "Hello I am a server, pass me the flask."
@@ -71,10 +70,8 @@ def at_a_glance():
             }
         )
 
-    response = {
-        "stocks": formatted_data
-    }
-    return json.dumps(response)
+    response = jsonify({"stocks": formatted_data})
+    return jsonify({"stocks": formatted_data})
 
 @app.route('/favorites')
 def get_favorite_tickers():
@@ -107,23 +104,20 @@ def get_favorite_tickers():
             }
         )
 
-    response = {
-        "stocks": formatted_data
-    }
+    response = jsonify({"stocks": formatted_data})
     response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
-    return json.dumps(response)
+    return response
 
-@app.route('/addfavorite/<string:symbol>')
+@app.route('/addfavorite/<string:symbol>', methods=['POST']) #new post
 def add_favorite(symbol):
     set_favorite(symbol)
-    return success_handler()
+    return jsonify({"success": True, "message": f"{symbol} set as favorite"}) #new
 
-@app.route('/delfavorite/<string:symbol>')
+@app.route('/delfavorite/<string:symbol>', methods=['POST'])  #new post
 def delete_favorite(symbol):
     remove_favorite(symbol)
-    return success_handler()
+    # return a success response
+    return jsonify({"success": True, "message": f"{symbol} removed from favorites"})
 
 
 def success_handler():
@@ -160,13 +154,13 @@ if __name__ == "__main__":
     for arg in args:
         arg = arg.lower()
 
-    # CORS Hotfix
-    # CORS(app)
-    # cors = CORS(app, resource={
-    #     r"/*":{
-    #         "origins":"*"
-    #     }
-    # })
+    #CORS Hotfix
+    CORS(app)
+    cors = CORS(app, resource={
+       r"/*":{
+            "origins":"*"
+        }
+     })
 
     if '--build' in args:
         if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
