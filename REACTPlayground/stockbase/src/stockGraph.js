@@ -6,7 +6,7 @@ const CandlestickChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily');
+        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily/2022-01-01/2023-01-01');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
