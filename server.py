@@ -23,7 +23,6 @@ db_pass = DB_CONFIGS['password']
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/favorites": {"origins": "http://localhost:3002"}}) #new
 @app.route('/')
 def root():
     return "Hello I am a server, pass me the flask."
@@ -160,13 +159,13 @@ if __name__ == "__main__":
     for arg in args:
         arg = arg.lower()
 
-    # CORS Hotfix
-    # CORS(app)
-    # cors = CORS(app, resource={
-    #     r"/*":{
-    #         "origins":"*"
-    #     }
-    # })
+    #CORS Hotfix
+    CORS(app)
+    cors = CORS(app, resource={
+       r"/*":{
+            "origins":"*"
+        }
+     })
 
     if '--build' in args:
         if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
