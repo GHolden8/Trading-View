@@ -23,7 +23,7 @@ db_pass = DB_CONFIGS['password']
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/favorites": {"origins": "http://localhost:3001"}}) #new
+CORS(app, resources={r"/favorites": {"origins": "http://localhost:3002"}}) #new
 @app.route('/')
 def root():
     return "Hello I am a server, pass me the flask."
