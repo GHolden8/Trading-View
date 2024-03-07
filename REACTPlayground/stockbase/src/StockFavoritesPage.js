@@ -1,36 +1,40 @@
-// StockFavoritesPage.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './stockFavoritesStyle.css';
 
 function StockFavoritesPage() {
   const navigate = useNavigate();
-  const [googlData, setGooglData] = useState({ latest: 'Loading...', percent_change: 'Loading...' });
+  const [serverResponse, setServerResponse] = useState('Loading...');
 
   useEffect(() => {
-    // Fetch the favorite stocks from the server when the component mounts
-    fetch('http://localhost:8080/favorites')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        // Find the GOOGL ticker in the response
-        const googlTicker = data.stocks.find(ticker => ticker.id === 'GOOGL');
-        // Update the state with the GOOGL data
-        setGooglData(googlTicker || { latest: 'Not found', percent_change: 'N/A' });
+    fetch('http://localhost:8080/favorites') // Update with the correct server URL if needed
+      .then(response => {
+        if (!response.ok) {
+          console.error('Server response status:', response.status);
+          throw new Error(`Network response was not ok, status: ${response.status}`);
+        }
+        return response.text(); // We use text() to get raw response
+      })
+      .then(rawData => {
+        console.log('Raw data:', rawData); // Log the raw data to see what it looks like
+        if (rawData === 'null') {
+          throw new Error('Received null from server');
+        }
+        // Set the raw data into the serverResponse state
+        setServerResponse(rawData || 'No data received');
       })
       .catch(error => {
-        console.error('Error fetching GOOGL data:', error);
-        // Update the state to show the error
-        setGooglData({ latest: 'Error', percent_change: 'Error' });
+        console.error('Error fetching data:', error);
+        setServerResponse(`Error: ${error.message}`);
       });
   }, []);
+  
 
   return (
     <div className="stock-favorites-body">
       <h1 className="stock-favorites-heading">Welcome to your Stock Favorites Page!</h1>
-      <h2>GOOGL</h2>
-      <p>Last Price: {googlData.latest}</p>
-      <p>Percent Change: {googlData.percent_change}%</p>
+      {/* Render the raw server response or error message */}
+      <pre>{serverResponse}</pre>
       <div className="stock-favorites-button-container">
         <button
           className="stock-favorites-button"
@@ -44,6 +48,7 @@ function StockFavoritesPage() {
 }
 
 export default StockFavoritesPage;
+
 
 
 
