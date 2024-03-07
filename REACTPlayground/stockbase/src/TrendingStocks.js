@@ -21,9 +21,11 @@ const TrendingData = () => {
         }
         //store the json in result after checking is done
         const result = await response.json();
+        const dataArray = result.data;
+        const entryOne = dataArray[0];
         console.log("RETRIEVED DATA:", result);
-
-        
+        console.log("DATA: ", dataArray[0]);
+        console.log("FIRST DATE: ", entryOne[0]);
         
       } catch (error) {
         console.error('Error fetching data:', error);
