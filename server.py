@@ -3,9 +3,10 @@ from flask_cors import CORS
 from threading import Thread
 from time import sleep, time
 import sys
+from flask import Flask #new
+from flask_cors import CORS #new
+import subprocess
 from flask import make_response #needed for retrieval of favorites
-
-
 from DatabaseConnector.database_utils import *
 from DatabaseConnector.yahoo_finance.yahooFinance import modtime
 from autoupdate import autoupdate
@@ -30,6 +31,44 @@ def root():
 @app.route('/<string:symbol>/<string:interval>')
 def get_data(symbol, interval):
     data = get_tickers(symbol, interval)
+
+    formatted_data = []
+    for x in data:
+        formatted_data.append(
+            list(x)
+        )
+
+    response = {
+        'symbol': symbol,
+        'interval': interval,
+        'data': data
+    }
+    return response
+
+@app.route('/<string:symbol>/<string:interval>/<int:days>')
+def get_window(symbol, interval, days):
+    some_days_ago = datetime.datetime.now() - datetime.timedelta(days)
+    data = get_tickers(symbol, interval, some_days_ago)
+
+    formatted_data = []
+    for x in data:
+        formatted_data.append(
+            list(x)
+        )
+
+    response = {
+        'symbol': symbol,
+        'interval': interval,
+        'data': data
+    }
+    return response
+
+@app.route('/<string:symbol>/<string:interval>/<string:startdate>/<string:enddate>')
+def get_adv_window(symbol, interval, startdate, enddate):
+    startdate = datetime.datetime.strptime(startdate, "%Y-%m-%d")
+    enddate = datetime.datetime.strptime(enddate, "%Y-%m-%d")
+
+    data = get_tickers(symbol, interval, startdate, enddate)
 
     formatted_data = []
     for x in data:
@@ -154,6 +193,13 @@ if __name__ == "__main__":
     for arg in args:
         arg = arg.lower()
 
+    # CORS Hotfix
+    CORS(app)
+    cors = CORS(app, resource={
+        r"/favorites":{
+            "origins":"*"
+        }
+    })
     #CORS Hotfix
     CORS(app)
     cors = CORS(app, resource={
@@ -211,15 +257,8 @@ if __name__ == "__main__":
         print("All updates complete.")
         exit(0)
 
-    # Flask Backend Thread
-    server_args = {'host': "127.0.0.1", 'port': 8080}
-    server_thread = Thread(target=app.run, kwargs=server_args)
+    print("Starting updating task...")
+    subprocess.run("python3 autoupdate.py", shell=True)
 
-    # Autoupdate thread
-    autoupdate_thread = Thread(target=autoupdate)
-
-    print("Starting server thread...")
-    server_thread.start()
-
-    print("Starting updating thread...")
-    autoupdate_thread.start()
+    print("Starting server...")
+    app.run(host="127.0.0.1", port=8080)
