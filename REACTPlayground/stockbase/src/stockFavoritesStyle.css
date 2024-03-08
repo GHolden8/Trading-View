@@ -35,6 +35,16 @@
   border-radius: 10px;
 }
 
+.stock-favorites-container {
+  height: 300px; /* Adjust the height as needed */
+  overflow-y: scroll;
+  margin-bottom: 20px; /* Spacing between the two containers */
+}
+
+/* Make sure the individual stock entries do not overflow their container */
+.stock-entry {
+  margin-bottom: 10px; /* Spacing between the stock entries */
+}
 
 
   

@@ -6,13 +6,14 @@ const CandlestickChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily');
+        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily/2022-01-01/2023-01-01');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+        //store the json in result after checking is done
         const result = await response.json();
         console.log(result);
-        // Define a function to map candlestick data
+        // takes data from json and maps
         const mapCandlestickData = (result) => ({
           x: new Date(result[0]),
           y: [parseFloat(result[2]), parseFloat(result[3]), parseFloat(result[4]), parseFloat(result[5])]
@@ -82,7 +83,7 @@ const CandlestickChart = () => {
       }
     };
     fetchData();
-  }, []); // Empty dependency array ensures useEffect runs only once on component mount
+  }, []); 
 
   return (
     <div id="chart" />
