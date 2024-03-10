@@ -1,19 +1,16 @@
-
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
 
-const CandlestickChart = () => {
+const CandlestickChart = ({ symbol, startDate, endDate }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily/2022-01-01/2023-01-01');
+        const response = await fetch(`http://127.0.0.1:8080/${symbol}/daily/${startDate}/${endDate}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        //store the json in result after checking is done
         const result = await response.json();
-        console.log(result);
-        // takes data from json and maps
+
         const mapCandlestickData = (result) => ({
           x: new Date(result[0]),
           y: [parseFloat(result[2]), parseFloat(result[3]), parseFloat(result[4]), parseFloat(result[5])]
@@ -21,18 +18,17 @@ const CandlestickChart = () => {
 
         const info = result.data.map(mapCandlestickData);
 
-
         const options = {
           series: [{
             name: 'candle',
             data: info
           }],
           chart: {
-            height: 350,
+            height: 400,
             type: 'candlestick',
           },
           title: {
-            text: 'CandleStick Chart',
+            text: `Graph of ${symbol}`,
             align: 'left'
           },
           annotations: {
@@ -72,7 +68,8 @@ const CandlestickChart = () => {
           }
         };
 
-        const chart = new ApexCharts(document.querySelector("#chart"), options);
+        const chartId = `chart-${symbol}-${startDate}-${endDate}`; // Unique ID for chart container
+        const chart = new ApexCharts(document.querySelector(`#${chartId}`), options);
         chart.render();
 
         return () => {
@@ -83,10 +80,10 @@ const CandlestickChart = () => {
       }
     };
     fetchData();
-  }, []); 
+  }, [symbol, startDate, endDate]);
 
   return (
-    <div id="chart" />
+    <div id={`chart-${symbol}-${startDate}-${endDate}`} /> // Unique ID for chart container
   );
 };
 
