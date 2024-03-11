@@ -11,7 +11,7 @@ function StockExaminer() {
   return (
     <p>
       <h1>Welcome to Stock View! Currently Viewing: </h1>
-        <CandlestickChart symbol = "GOOGL" startDate="2023-01-01" endDate="2023-02-01" />
+        <CandlestickChart symbol = "GOOGL" startDate="2023-01-01" endDate="2023-03-01" />
       <button onClick={() => navigate('/')}>Home</button>
     </p>
   );
