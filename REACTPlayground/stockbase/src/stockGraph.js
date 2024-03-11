@@ -71,10 +71,11 @@ const CandlestickChart = ({ symbol, startDate, endDate }) => {
         const chartId = `chart-${symbol}-${startDate}-${endDate}`; // Unique ID for chart container
         const chart = new ApexCharts(document.querySelector(`#${chartId}`), options);
         chart.render();
-
+        chart.resetSeries();
         return () => {
           chart.destroy(); // Destroy the chart when the component unmounts
         };
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
