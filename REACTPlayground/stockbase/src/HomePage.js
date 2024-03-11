@@ -25,6 +25,7 @@ function HomePage() {
       <h1>Welcome to the Home Page!</h1>
       <button onClick={() => navigate('/stockfavorites')}>Go to Stock Favorites Page</button>
       <button onClick={() => navigate('/stockexaminer')}>Go to Stock Page</button>
+      <button onClick={() => navigate('teststockexaminer')}>Go to testStockExaminer!</button>
       <h1>The most recent Google share price is: {testData}</h1>
       <TrendingData/>
     </div>
