@@ -4,7 +4,7 @@ import CandlestickChart from './stockGraph'; // Assuming this is correctly set u
 
 function StockExaminer() {
   const navigate = useNavigate();
-  const { symbol } = useParams(); // Extracts the symbol from URL params
+  const { symbol } = useParams(); // Extracts the symbol from URL params *THIS IS WHERE JAKE WILL NEED TO HAVE THE SYMBOL CHANGE WHEN THE STOCK IS CLICKED, PART OF THE URL PATH *
   const [stockInfo, setStockInfo] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -21,9 +21,10 @@ function StockExaminer() {
         const favoritesResponse = await fetch('http://localhost:8080/favorites');
         const favoritesData = await favoritesResponse.json();
         setIsFavorite(favoritesData.stocks.some(s => s.id === symbol));
+
       } catch (error) {
         console.error('Error:', error);
-      }
+      }//Error handler
     };
 
     fetchDetailsAndFavorites();
@@ -39,14 +40,14 @@ function StockExaminer() {
         setIsFavorite(!isFavorite);
         // Optional: Re-fetch data or take other actions on success
         if (!isFavorite) {
-          navigate('/stockfavorites'); // Adjust the navigation path as necessary
+          navigate('/stockfavorites'); //once clicked, naviagte to the favorites page
         }
       } else {
         throw new Error(data.message || 'Failed to toggle favorite status');
-      }
+      }//erro handler
     } catch (error) {
       console.error('Error:', error);
-    }
+    }//error handler
   };
 
   return (
@@ -55,12 +56,14 @@ function StockExaminer() {
       {stockInfo && (
         <>
           {stockInfo && <CandlestickChart symbol='GOOGL' startDate = '2023-01-01' endDate = '2023-03-01'/>} {/* Pass stockInfo as props to CandlestickChart */}
+
           <button onClick={toggleFavorite}>
             {isFavorite ? '− Remove from Favorites' : '+ Add to Favorites'}
-          </button>
+          </button>/{/* Button to handle the adding or removal of a stock to favorites */}
+
         </>
       )}
-      <button onClick={() => navigate('/')}>Home</button>
+      <button onClick={() => navigate('/')}>Home</button> 
     </div>
   );
 }
