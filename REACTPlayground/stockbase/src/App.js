@@ -10,9 +10,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} exact />
-        <Route path="/stockexaminer" element={<StockExaminer />} />
+        <Route path="/stockexaminer/:symbol" element={<StockExaminer />} />
         <Route path="/stockfavorites" element={< StockFavoritesPage/>} />
-        <Route path="/teststockexaminer" element={<TestStockExaminer/>} />
+        <Route path="/teststockexaminer/:symbol" element={<TestStockExaminer />} />
       </Routes>
     </Router>
   );
