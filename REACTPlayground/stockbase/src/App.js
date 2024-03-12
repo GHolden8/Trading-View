@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './HomePage';
 import StockFavoritesPage from './StockFavoritesPage';
 import StockExaminer from './StockExaminer';
-import testStockExaminer from './TestStockExaminer';
+import TestStockExaminer from './TestStockExaminer';
 
 function App() {
   return (
