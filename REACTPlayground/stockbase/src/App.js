@@ -12,6 +12,7 @@ function App() {
         <Route path="/" element={<HomePage />} exact />
         <Route path="/stockexaminer/:symbol" element={<StockExaminer />} />
         <Route path="/stockfavorites" element={< StockFavoritesPage/>} />
+        <Route path="/teststockexaminer/:symbol" element={<TestStockExaminer />} />
       </Routes>
     </Router>
   );
