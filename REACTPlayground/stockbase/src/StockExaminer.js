@@ -59,7 +59,7 @@ function StockExaminer() {
 
           <button onClick={toggleFavorite}>
             {isFavorite ? '− Remove from Favorites' : '+ Add to Favorites'}
-          </button>/{/* Button to handle the adding or removal of a stock to favorites */}
+          </button>{/* Button to handle the adding or removal of a stock to favorites */}
 
         </>
       )}

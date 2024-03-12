@@ -5,19 +5,13 @@ import './stockFavoritesStyle.css';
 function StockFavoritesPage() {
   const navigate = useNavigate();
   const [favoriteStocks, setFavoriteStocks] = useState([]);
-  const [nonFavoriteStocks, setNonFavoriteStocks] = useState([]);
 
-  // Function to fetch favorite and non-favorite stocks
+  // Function to fetch favorite stocks
   const fetchStocks = () => {
-    Promise.all([
-      fetch('http://localhost:8080/favorites').then(res => res.json()),
-      fetch('http://localhost:8080/nonfavorites').then(res => res.json())
-    ]).then(([favoritesData, nonFavoritesData]) => {
+    fetch('http://localhost:8080/favorites').then(res => res.json())
+    .then(favoritesData => {
       if (favoritesData && favoritesData.stocks) {
         setFavoriteStocks(favoritesData.stocks);
-      }
-      if (nonFavoritesData && nonFavoritesData.stocks) {
-        setNonFavoriteStocks(nonFavoritesData.stocks);
       }
     }).catch(error => {
       console.error('Error fetching stocks:', error);
@@ -29,28 +23,6 @@ function StockFavoritesPage() {
     fetchStocks();
   }, []);
 
-  const addToFavorites = (symbol) => {
-    fetch(`http://localhost:8080/addfavorite/${symbol}`, { method: 'POST' })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to set ${symbol} as favorite, status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) {
-          // Re-fetch favorites and non-favorites to update the view
-          fetchStocks();
-        } else {
-          throw new Error(`Failed to add ${symbol} to favorites`);
-        }
-      })
-      .catch(error => {
-        console.error(`Error adding ${symbol} to favorites:`, error);
-        // Handle errors, such as by setting error messages in state
-      });
-  };
-
   const removeFromFavorites = (symbol) => {
     fetch(`http://localhost:8080/delfavorite/${symbol}`, { method: 'POST' }) // Ensure the method type matches what the server expects
       .then(response => {
@@ -61,7 +33,7 @@ function StockFavoritesPage() {
       })
       .then(data => {
         if (data.success) {
-          // Re-fetch favorites and non-favorites to update the view
+          // Re-fetch favorites to update the view
           fetchStocks();
         } else {
           throw new Error(`Failed to remove ${symbol} from favorites`);
@@ -89,18 +61,6 @@ function StockFavoritesPage() {
         ))}
       </div>
   
-      <div className="scrollable-container">
-        <h2>Others</h2>
-        {nonFavoriteStocks.map(stock => (
-          <div key={stock.id} className="stock-entry">
-            <h3>{stock.id}</h3>
-            <p>Last Price: {stock.latest}</p>
-            <p>Percent Change: {stock.percent_change}%</p>
-            <button onClick={() => addToFavorites(stock.id)}>+</button>
-          </div>
-        ))}
-      </div>
-  
       <div className="stock-favorites-button-container">
         <button className="stock-favorites-button" onClick={() => navigate('/')}>
           Go to Home Page
@@ -108,11 +68,10 @@ function StockFavoritesPage() {
       </div>
     </div>
   );
-  
-  
 }
 
 export default StockFavoritesPage;
+
 
 
 
