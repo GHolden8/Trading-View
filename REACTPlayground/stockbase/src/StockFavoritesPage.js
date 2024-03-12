@@ -47,27 +47,34 @@ function StockFavoritesPage() {
 
   return (
     <div className="stock-favorites-body">
-      <h1 className="stock-favorites-heading">Welcome to your Stock Favorites Page!</h1>
+      <div className="stock-favorites-top-button-container">
+        <button className="stock-favorites-button" onClick={() => navigate('/')}>
+          Go to Home Page
+        </button>
+      </div>
+  
+      <h1 className="stock-favorites-heading">Your Favorited Stocks</h1>
   
       <div className="scrollable-container">
         <h2>Favorites</h2>
         {favoriteStocks.map(stock => (
           <div key={stock.id} className="stock-entry">
-            <h3>{stock.id}</h3>
-            <p>Last Price: {stock.latest}</p>
-            <p>Percent Change: {stock.percent_change}%</p>
-            <button onClick={() => removeFromFavorites(stock.id)}>−</button>
+            <div className="stock-details">
+              <h3>{stock.id}</h3>
+              <p className="stock-price">Last Price: {stock.latest} USD</p>
+              <p className={`stock-change ${stock.percent_change < 0 ? 'negative' : 'positive'}`}>
+                Percent Change: {stock.percent_change}%
+              </p>
+            </div>
+            <button onClick={() => removeFromFavorites(stock.id)} className="stock-toggle-favorite">
+              −
+            </button>
           </div>
         ))}
       </div>
-  
-      <div className="stock-favorites-button-container">
-        <button className="stock-favorites-button" onClick={() => navigate('/')}>
-          Go to Home Page
-        </button>
-      </div>
     </div>
   );
+   
 }
 
 export default StockFavoritesPage;

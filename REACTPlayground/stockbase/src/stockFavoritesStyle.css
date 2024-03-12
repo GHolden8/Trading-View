@@ -16,8 +16,7 @@
 }
 
 .stock-favorites-button-container {
-  align-self: flex-start;
-  padding-left: 30px;
+  display: none;
 }
 
 .stock-favorites-button {
@@ -35,16 +34,65 @@
   border-radius: 10px;
 }
 
+.stock-favorites-top-button-container {
+  position: absolute;
+  top: 20px; /* Adjust the padding from the top as needed */
+  left: 20px; /* Adjust this if the button is too far left */
+  z-index: 100; /* Ensures the button is above other elements */
+}
+
 .stock-favorites-container {
   height: 300px; /* Adjust the height as needed */
   overflow-y: scroll;
   margin-bottom: 20px; /* Spacing between the two containers */
 }
 
-/* Make sure the individual stock entries do not overflow their container */
 .stock-entry {
   margin-bottom: 10px; /* Spacing between the stock entries */
+  background: #333; /* or any color you prefer */
+  border-radius: 8px;
+  padding: 16px;
+  color: white; /* Adjust the text color as needed */
 }
+
+.stock-entry h3 {
+  margin: 0;
+  padding: 0;
+  font-size: 1.5rem; /* Adjust the font size as needed */
+}
+
+.stock-entry p {
+  margin: 4px 0; /* Removes extra space between price and change */
+  font-weight: bold; /* Makes the text bold */
+}
+
+.stock-entry p:last-child {
+  color: green; /* default positive color */
+  margin-right: 20px; /* ensures space for the button */
+}
+
+.stock-entry p.negative {
+  color: red; /* negative color */
+}
+
+.stock-favorites-button {
+  /* ...other styles... */
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white; /* Adjust the background color as needed */
+  color: black; /* Adjust text color as needed */
+  border-radius: 50%; /* Makes it round */
+}
+
+/* Ensure the button does not overlap the text on smaller screens */
+@media (max-width: 600px) {
+  .stock-entry p {
+    padding-right: 40px; /* Adjust the padding to ensure text does not overlap with the button */
+  }
+}
+
 
 
   
