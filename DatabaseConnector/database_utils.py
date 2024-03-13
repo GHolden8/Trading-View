@@ -102,7 +102,7 @@ def get_tickers(symbol, interval, start=None, end=None):
         FROM tracked_tickers tt
             JOIN ticker_dataset AS td
                 ON td.tickerid = tt.tickerid
-            WHERE tt.ticker = 'AMZN'
+            WHERE tt.ticker = '{symbol}'
                 AND td.interval = 'daily'
                 AND td.`timestamp` >= "{start}"
             ORDER BY td.`timestamp` ASC
@@ -119,7 +119,7 @@ def get_tickers(symbol, interval, start=None, end=None):
         FROM tracked_tickers tt
             JOIN ticker_dataset AS td
                 ON td.tickerid = tt.tickerid
-            WHERE tt.ticker = 'AMZN'
+            WHERE tt.ticker = '{symbol}'
                 AND td.interval = 'daily'
                 AND td.`timestamp` >= "{start}"
                 AND td.`timestamp` <= "{end}"

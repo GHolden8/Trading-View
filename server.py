@@ -33,6 +33,8 @@ def get_data(symbol, interval):
     data = get_tickers(symbol, interval)
 
     formatted_data = []
+    if(data == None):
+        return json.dumps(None)
     for x in data:
         formatted_data.append(
             list(x)
