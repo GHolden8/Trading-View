@@ -57,7 +57,7 @@ const CandlestickChart = ({ symbol, startDate, endDate }) => {
             type: 'category',
             labels: {
               formatter: function (val) {
-                return new Date(val).toLocaleString('en-US', { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+                return new Date(val).toLocaleString('en-US', { month: 'short', day: '2-digit', year:'numeric', hour: '2-digit', minute: '2-digit' });
               }
             }
           },

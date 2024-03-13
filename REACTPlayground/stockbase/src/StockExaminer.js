@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CandlestickChart from './stockGraph'; // Assuming this is correctly set up to display based on `stockInfo`
+import './stockExaminer.css';
 
 function StockExaminer() {
   const navigate = useNavigate();
@@ -51,19 +52,19 @@ function StockExaminer() {
   };
 
   return (
-    <div>
-      <h1>Stock Examiner</h1>
+    <div className = "stock-examiner-body">
+      <h1>Welcome to the Stock View! Currently Viewing: </h1>
       {stockInfo && (
         <>
-          {stockInfo && <CandlestickChart symbol='NVDA' startDate = '2023-01-01' endDate = '2023-03-01'/>} {/* Pass stockInfo as props to CandlestickChart */}
+          {stockInfo && <CandlestickChart symbol='MSFT' startDate = '2023-01-01' endDate = '2023-03-01'/>} {/* Pass stockInfo as props to CandlestickChart */}
 
-          <button onClick={toggleFavorite}>
+          <button className = "stock-examiner-button" onClick={toggleFavorite}>
             {isFavorite ? '− Remove from Favorites' : '+ Add to Favorites'}
           </button>{/* Button to handle the adding or removal of a stock to favorites */}
 
         </>
       )}
-      <button onClick={() => navigate('/')}>Home</button> 
+      <button className = "stock-examiner-button" onClick={() => navigate('/')}>Home</button>
     </div>
   );
 }
