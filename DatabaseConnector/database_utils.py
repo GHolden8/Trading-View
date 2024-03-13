@@ -214,11 +214,12 @@ def bulk_download(symbols, start_epoch, end_epoch, interval):
     for symbol in symbols:
         data = None
         try:
+            print("Retrieving data for:", symbol)
             data = retrieve_data(symbol, start_epoch, end_epoch, interval)
         except Exception:
             print("Connection error while retrieving stock:", symbol, "\nCheck connection.")
             continue
-        with Bar(f'Downloading {symbol}', max=len(data)) as bar:
+        with Bar(f'Inserting {symbol}', max= (len(data) + 1), suffix='%(percent).1f%% - %(eta)ds') as bar:
             for candle in data:
                 insert_candle(
                     symbol,
@@ -230,3 +231,4 @@ def bulk_download(symbols, start_epoch, end_epoch, interval):
                     candle.get('close')
                 )
                 bar.next()
+            bar.next()
