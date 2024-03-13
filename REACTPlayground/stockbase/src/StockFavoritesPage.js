@@ -6,6 +6,8 @@ function StockFavoritesPage() {
   const navigate = useNavigate();
   const [favoriteStocks, setFavoriteStocks] = useState([]);
 
+  const sortedStocks = favoriteStocks.sort((a, b) => a.id.localeCompare(b.id));
+
   // Function to fetch favorite stocks
   const fetchStocks = () => {
     fetch('http://localhost:8080/favorites').then(res => res.json())
@@ -55,15 +57,15 @@ function StockFavoritesPage() {
   
       <h1 className="stock-favorites-heading">Favorite Stocks</h1>
       
-      <div className="scrollable-container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {favoriteStocks.map((stock, index) => (
-          <div key={stock.id} className="stock-entry" style={{ margin: '10px', boxSizing: 'border-box', border: '1px solid black', padding: '10px', textAlign: 'center', flex: '0 0 calc(33.33% - 20px)' }}>
+      <div className="scrollable-container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+        {sortedStocks.map((stock, index) => (
+          <div key={stock.id} className="stock-entry" style={{ margin: '10px', width: 'calc(33.33% - 20px)', boxSizing: 'border-box', border: '1px solid black', padding: '10px', textAlign: 'center' }}>
             <h3>{stock.id}</h3>
             <p className="stock-price">Last Price: {stock.latest} USD</p>
             <p className={`stock-change ${stock.percent_change < 0 ? 'negative' : 'positive'}`}>
               Percent Change: {stock.percent_change}%
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ marginTop: '10px' }}>
               <button onClick={() => removeFromFavorites(stock.id)} className="stock-toggle-favorite" style={{ width: '100%' }}>
                 Remove From Favorites
               </button>
