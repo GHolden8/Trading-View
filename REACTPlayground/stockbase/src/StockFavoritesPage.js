@@ -53,22 +53,27 @@ function StockFavoritesPage() {
         </button>
       </div>
   
-      <h1 className="stock-favorites-heading">Favorite Stocks</h1>
+      <h1 className="stock-favorites-heading">Favorited Stocks' Listing Page</h1>
   
       <div className="scrollable-container">
         <h2></h2>
         {favoriteStocks.map(stock => (
-          <div key={stock.id} className="stock-entry">
-            <div className="stock-details">
+          <div key={stock.id} className="stock-entry" style={{ display: 'flex', alignItems: 'center', width: '100%', boxSizing: 'border-box', border: '1px solid black', padding: '10px' }}>
+            <div style={{ flexGrow: 1 }}>
               <h3>{stock.id}</h3>
               <p className="stock-price">Last Price: {stock.latest} USD</p>
               <p className={`stock-change ${stock.percent_change < 0 ? 'negative' : 'positive'}`}>
                 Percent Change: {stock.percent_change}%
               </p>
             </div>
-            <button onClick={() => removeFromFavorites(stock.id)} className="stock-toggle-favorite">
-              Remove From Favorites
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <button onClick={() => navigate(`/stockexaminer/${stock.id}`)} className="stock-toggle-favorite" style={{ marginLeft: 'auto', width: '100%' }}>
+                View Stock
+              </button>
+              <button onClick={() => removeFromFavorites(stock.id)} className="stock-toggle-favorite" style={{ marginLeft: 'auto', width: '100%' }}>
+                Remove From Favorites
+              </button>
+            </div>
           </div>
         ))}
       </div>

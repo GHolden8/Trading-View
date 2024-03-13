@@ -50,13 +50,22 @@ function StockExaminer() {
       console.error('Error:', error);
     }//error handler
   };
+// Define a function to format the current date
+function getCurrentDayFormatted() {
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, '0');
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const year = today.getFullYear();
+
+  return `${year}-${month}-${day}`;
+}
 
   return (
     <div className = "stock-examiner-body">
       <h1>Welcome to the Stock View! Currently Viewing: </h1>
       {stockInfo && (
         <>
-          {stockInfo && <CandlestickChart symbol='MSFT' startDate = '2023-01-01' endDate = '2023-03-01'/>} {/* Pass stockInfo as props to CandlestickChart */}
+          {stockInfo && <CandlestickChart className= "candle" symbol={`${symbol}`} startDate = '2022-01-01' endDate={`${getCurrentDayFormatted()}`}/>} {/* Pass stockInfo as props to CandlestickChart */}
 
           <button className = "stock-examiner-button" onClick={toggleFavorite}>
             {isFavorite ? '− Remove from Favorites' : '+ Add to Favorites'}
