@@ -53,10 +53,10 @@ function StockFavoritesPage() {
         </button>
       </div>
   
-      <h1 className="stock-favorites-heading">Your Favorited Stocks</h1>
+      <h1 className="stock-favorites-heading">Favorited Stocks' Listing Page</h1>
   
       <div className="scrollable-container">
-        <h2>Favorites</h2>
+        <h2></h2>
         {favoriteStocks.map(stock => (
           <div key={stock.id} className="stock-entry">
             <div className="stock-details">
