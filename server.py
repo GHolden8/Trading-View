@@ -166,7 +166,7 @@ def failure_handler():
     return r'{"success": false}'
 
 STOCKS = [
-    'AAPL'
+    'AAPL',
     'MSFT',
     'NVDA',
     'GOOGL',
