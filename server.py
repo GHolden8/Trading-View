@@ -210,7 +210,7 @@ if __name__ == "__main__":
 
     if '--build' in args:
         if input("Nuke Database? This will wipe ALL price data! Y/n: ").lower() == 'y':
-            print("Droping and Rebuilding DB in 5 seconds...")
+            print("Dropping and Rebuilding DB in 5 seconds...")
             sleep(5)
             # nuke + rebuild DB
             db_script_file = open("DatabaseConnector/sql/database_setup_script.sql", 'r')
