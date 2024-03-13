@@ -67,7 +67,7 @@ function StockFavoritesPage() {
               </p>
             </div>
             <button onClick={() => removeFromFavorites(stock.id)} className="stock-toggle-favorite">
-              −
+              Remove From Favorites
             </button>
           </div>
         ))}
