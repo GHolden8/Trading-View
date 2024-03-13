@@ -15,6 +15,7 @@ const CandlestickChart = ({ symbol, startDate, endDate }) => {
           x: new Date(result[0]),
           y: [parseFloat(result[2]), parseFloat(result[3]), parseFloat(result[4]), parseFloat(result[5])]
         });
+        console.log('Result:', result);
 
         const info = result.data.map(mapCandlestickData);
 
@@ -82,7 +83,6 @@ const CandlestickChart = ({ symbol, startDate, endDate }) => {
     };
     fetchData();
   }, [symbol, startDate, endDate]);
-
   return (
     <div id={`chart-${symbol}-${startDate}-${endDate}`} /> // Unique ID for chart container
   );
