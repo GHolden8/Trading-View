@@ -1,42 +1,77 @@
+import React, { useEffect, useState } from 'react';
+import DataTable from 'react-data-table-component';
 
-import React, { useEffect } from 'react';
+function TrendingData() {
+    const [stockData, setStockData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const stockNames = ["NVDA", "GOOGL", "META", "LLY", "TSLA", "AVGO", "V", "JPM", "UNH", "MA", "HD", "AMZN", "XOM"];
 
-/*
-JSON DATA ORDER:
-0 - Date/time
-1 - interval
-2 - open
-3 - high
-4 - low
-5 - close
-*/
+    useEffect(() => {
+        setIsLoading(true);
+        const fetchData = async (stockSymbol) => {
+            const response = await fetch(`http://127.0.0.1:8080/${stockSymbol}/daily`);
+            if (!response.ok) {
+                throw new Error(`Could not fetch ${stockSymbol} data`);
+            }
+            const result = await response.json();
+            const dataArray = result.data;
+            return dataArray[dataArray.length - 1];
+        };
 
-const TrendingData = () => {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8080/GOOGL/daily');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        //store the json in result after checking is done
-        const result = await response.json();
-        const dataArray = result.data;
-        const entryOne = dataArray[0];
-        console.log("RETRIEVED DATA:", result);
-        console.log("DATA: ", dataArray[0]);
-        console.log("FIRST DATE: ", entryOne[0]);
-        
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+        Promise.all(stockNames.map(symbol => fetchData(symbol)))
+            .then(data => {
+                setStockData(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                setIsLoading(false);
+            });
+    }, []);
+
+    const calculateDiffs = () => {
+        return stockData.map((data, index) => {
+            const open = data[2];
+            const close = data[5];
+            const diff = ((close - open) / open) * 100;
+            return { diff, name: stockNames[index] };
+        });
     };
-    fetchData();
-  }, []); 
 
-  return (
-    <div id="chart" />
-  );
-};
+    const formattedData = () => {
+        const diffs = calculateDiffs();
+        const gains = diffs.filter(d => d.diff > 0).sort((a, b) => b.diff - a.diff).slice(0, 5);
+        const losses = diffs.filter(d => d.diff < 0).sort((a, b) => a.diff - b.diff).slice(0, 5);
+        return { gains, losses };
+    };
+
+    const columns = [
+        {
+            name: 'Stock',
+            selector: row => row.name
+        },
+        {
+            name: 'Change',
+            selector: row => `${row.diff.toFixed(2)}%`,
+            sortable: true,
+        }
+    ];
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    const { gains, losses } = formattedData();
+
+    return (
+        <div className='container mt-5'>
+            <h2>Biggest Gainers</h2>
+            <DataTable columns={columns} data={gains} />
+            <h2>Biggest Losers</h2>
+            <DataTable columns={columns} data={losses} />
+        </div>
+    );   
+}
 
 export default TrendingData;
+
