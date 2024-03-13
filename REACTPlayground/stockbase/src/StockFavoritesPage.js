@@ -53,7 +53,7 @@ function StockFavoritesPage() {
         </button>
       </div>
   
-      <h1 className="stock-favorites-heading">Favorited Stocks' Listing Page</h1>
+      <h1 className="stock-favorites-heading">Favorite Stocks</h1>
   
       <div className="scrollable-container">
         <h2></h2>
