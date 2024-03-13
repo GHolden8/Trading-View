@@ -55,7 +55,7 @@ function StockExaminer() {
       <h1>Stock Examiner</h1>
       {stockInfo && (
         <>
-          {stockInfo && <CandlestickChart symbol='MSFT' startDate = '2023-01-01' endDate = '2023-03-01'/>} {/* Pass stockInfo as props to CandlestickChart */}
+          {stockInfo && <CandlestickChart symbol='GOOGL' startDate = '2022-01-01' endDate = '2023-03-12'/>} {/* Pass stockInfo as props to CandlestickChart */}
 
           <button onClick={toggleFavorite}>
             {isFavorite ? '− Remove from Favorites' : '+ Add to Favorites'}
