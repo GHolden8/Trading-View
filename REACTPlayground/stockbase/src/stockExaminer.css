@@ -1,6 +1,6 @@
 /* stockExaminer.css for the view of the graph and buttons*/
 .stock-examiner-body {
-  background-color: rgb(40, 35, 35);
+  background-color: rgb(77, 67, 67);
   min-height: 100vh;
   margin: 0;
   padding-top: 30px;
@@ -32,8 +32,6 @@ h1 {
   white-space: nowrap;
   width: auto;
 }
-
-
 
 
 
