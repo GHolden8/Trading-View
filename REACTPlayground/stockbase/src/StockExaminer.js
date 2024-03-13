@@ -65,7 +65,7 @@ function getCurrentDayFormatted() {
       <h1>Welcome to the Stock View! Currently Viewing: </h1>
       {stockInfo && (
         <>
-          {stockInfo && <CandlestickChart className= "candle" symbol='GOOGL' startDate = '2022-01-01' endDate={`${getCurrentDayFormatted()}`}/>} {/* Pass stockInfo as props to CandlestickChart */}
+          {stockInfo && <CandlestickChart className= "candle" symbol={`${symbol}`} startDate = '2022-01-01' endDate={`${getCurrentDayFormatted()}`}/>} {/* Pass stockInfo as props to CandlestickChart */}
 
           <button className = "stock-examiner-button" onClick={toggleFavorite}>
             {isFavorite ? '− Remove from Favorites' : '+ Add to Favorites'}
