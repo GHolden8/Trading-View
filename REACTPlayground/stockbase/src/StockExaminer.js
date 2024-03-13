@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CandlestickChart from './stockGraph'; // Assuming this is correctly set up to display based on `stockInfo`
+import './stockFavoritesStyle.css';
 
 function StockExaminer() {
   const navigate = useNavigate();
