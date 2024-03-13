@@ -5,6 +5,8 @@ Contains various utilities for working with the database.'''
 import os
 import json
 
+from progress.bar import Bar
+
 from DatabaseConnector.av_api.av_api_main import *
 from DatabaseConnector.yahoo_finance.yahooFinance import *
 from DatabaseConnector.mysql_connect import MySQLConnect
@@ -216,16 +218,15 @@ def bulk_download(symbols, start_epoch, end_epoch, interval):
         except Exception:
             print("Connection error while retrieving stock:", symbol, "\nCheck connection.")
             continue
-        counter = 0
-        for candle in data:
-            print(symbol, "Percent Complete:", '%2f' % (counter/len(data)*100.0))
-            insert_candle(
-                symbol,
-                candle.get('date'),
-                interval,
-                candle.get('open'),
-                candle.get('high'),
-                candle.get('low'),
-                candle.get('close')
-            )
-            counter += 1
+        with Bar(f'Downloading {symbol}', max=len(data)) as bar:
+            for candle in data:
+                insert_candle(
+                    symbol,
+                    candle.get('date'),
+                    interval,
+                    candle.get('open'),
+                    candle.get('high'),
+                    candle.get('low'),
+                    candle.get('close')
+                )
+                bar.next()
