@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 
 function TrendingData() {
+    const navigate = useNavigate();
     const [stockData, setStockData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const stockNames = ["NVDA", "GOOGL", "META", "LLY", "TSLA", "AVGO", "V", "JPM", "UNH", "MA", "HD", "AMZN", "XOM"];
@@ -57,6 +59,10 @@ function TrendingData() {
         }
     ];
 
+    const handleRowClick = (row) => {
+        navigate(`/stockexaminer/${row.name}`);
+    };
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -66,12 +72,11 @@ function TrendingData() {
     return (
         <div className='container mt-5'>
             <h2>Biggest Gainers</h2>
-            <DataTable columns={columns} data={gains} />
+            <DataTable columns={columns} data={gains} onRowClicked={handleRowClick}/>
             <h2>Biggest Losers</h2>
-            <DataTable columns={columns} data={losses} />
+            <DataTable columns={columns} data={losses} onRowClicked={handleRowClick}/>
         </div>
     );   
 }
 
 export default TrendingData;
-

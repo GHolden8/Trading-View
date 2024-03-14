@@ -3,18 +3,6 @@ import React from 'react';
 import TrendingData from './TrendingStocks';
 import { useNavigate } from 'react-router-dom';
 
-//var tempData = "";
-
-/*
-JSON DATA ORDER:
-0 - Date/time
-1 - interval
-2 - open
-3 - high
-4 - low
-5 - close
-
-*/
 
 function HomePage() {
   const navigate = useNavigate();
