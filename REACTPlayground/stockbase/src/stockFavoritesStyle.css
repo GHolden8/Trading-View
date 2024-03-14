@@ -4,7 +4,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: rgb(77, 67, 67);
+  background-color: rgb(58, 52, 52);
   min-height: 100vh;
   margin: 0;
   padding-top: 30px;
@@ -39,8 +39,8 @@
 .stock-favorites-top-button-container {
   
   position: absolute;
-  top: 100px; /* Adjust the padding from the top as needed */
-  left: 320px; /* Adjust this if the button is too far left */
+  top: 720px; /* Adjust the padding from the top as needed */
+  left: 890px; /* Adjust this if the button is too far left */
   z-index: 100; /* Ensures the button is above other elements */
 }
 
