@@ -78,7 +78,7 @@ function StockFavoritesPage() {
             </div>
           </div>
         ))}
-      </div>
+      </div> 
     </div>
   );
    
