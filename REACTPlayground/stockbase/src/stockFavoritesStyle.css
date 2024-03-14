@@ -91,6 +91,10 @@
   margin-right: 20px; /* ensures space for the button */
 }
 
+.stock-entry p.positive {
+  color: green; /* color for positive percentage changes */
+}
+
 .stock-entry p.negative {
   color: red; /* negative color */
 }
