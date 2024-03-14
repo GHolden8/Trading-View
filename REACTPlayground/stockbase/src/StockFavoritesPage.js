@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './stockFavoritesStyle.css';
+import './stockFavoritesStyle.css'; //import css
 
 function StockFavoritesPage() {
   const navigate = useNavigate();
+  //setup the navigate constant, allows use of the React router
   const [favoriteStocks, setFavoriteStocks] = useState([]);
+  //setup of the use state variable favoriteStocks, to be updated by the setFavoriteStocks function
 
   const sortedStocks = favoriteStocks.sort((a, b) => a.id.localeCompare(b.id));
+  //sort the stocks in alphabetical order by their id property
 
   // Function to fetch favorite stocks
   const fetchStocks = () => {
-    fetch('http://localhost:8080/favorites').then(res => res.json())
+    fetch('http://localhost:8080/favorites').then(res => res.json()) //fetch; HTTP GET request to the server. returns promise as a json object
     .then(favoritesData => {
       if (favoritesData && favoritesData.stocks) {
         setFavoriteStocks(favoritesData.stocks);
@@ -19,11 +22,11 @@ function StockFavoritesPage() {
       console.error('Error fetching stocks:', error);
       // Handle errors, such as by setting error messages in state
     });
-  };
+  };//end of func
 
   useEffect(() => {
     fetchStocks();
-  }, []);
+  }, []); //little confused on this part... what it does
 
   const removeFromFavorites = (symbol) => {
     fetch(`http://localhost:8080/delfavorite/${symbol}`, { method: 'POST' }) // Ensure the method type matches what the server expects
@@ -45,7 +48,7 @@ function StockFavoritesPage() {
         console.error(`Error removing ${symbol} from favorites:`, error);
         // Handle errors, such as by setting error messages in state
       });
-  };
+  };//end of remove from favorites function
 
   return (
     <div className="stock-favorites-body">
@@ -79,7 +82,7 @@ function StockFavoritesPage() {
     </div>
   );
    
-}
+}//end of stock favorites page func
 
 export default StockFavoritesPage;
 
