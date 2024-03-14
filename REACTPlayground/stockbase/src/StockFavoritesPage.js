@@ -29,20 +29,20 @@ function StockFavoritesPage() {
   }, []); //little confused on this part... what it does
 
   const removeFromFavorites = (symbol) => {
-    fetch(`http://localhost:8080/delfavorite/${symbol}`, { method: 'POST' }) // Ensure the method type matches what the server expects
+    fetch(`http://localhost:8080/delfavorite/${symbol}`, { method: 'POST' }) //Send POST fetch request to server to remove stock from favorites
       .then(response => {
         if (!response.ok) {
           throw new Error(`Failed to remove ${symbol} from favorites, status: ${response.status}`);
-        }
-        return response.json(); // Assuming the server returns a JSON response
+        }//error handler for failing to remove stock
+        return response.json(); // Accept the JSON response if it is sent back
       })
       .then(data => {
         if (data.success) {
-          // Re-fetch favorites to update the view
+          // Once complete, then refresh the stocks
           fetchStocks();
         } else {
           throw new Error(`Failed to remove ${symbol} from favorites`);
-        }
+        }//else just handle the error
       })
       .catch(error => {
         console.error(`Error removing ${symbol} from favorites:`, error);
