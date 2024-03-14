@@ -40,7 +40,7 @@
   
   position: absolute;
   top: 720px; /* Adjust the padding from the top as needed */
-  left: 890px; /* Adjust this if the button is too far left */
+  left: 960px; /* Adjust this if the button is too far left */
   z-index: 100; /* Ensures the button is above other elements */
 }
 
