@@ -62,7 +62,7 @@ function getCurrentDayFormatted() {
 
   return (
     <div className = "stock-examiner-body">
-      <h1>Welcome to the Stock View! Currently Viewing: </h1>
+      <h1Currently Viewing {`${symbol}`} </h1>
       {stockInfo && (
         <>
           {stockInfo && <CandlestickChart className= "candle" symbol={`${symbol}`} startDate = '2022-01-01' endDate={`${getCurrentDayFormatted()}`}/>} {/* Pass stockInfo as props to CandlestickChart */}
