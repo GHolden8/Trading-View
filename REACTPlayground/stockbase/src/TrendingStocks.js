@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
+import './TrendingStocks.css';
+import { tableOneStyles } from './tableStyle.jsx';
+import { tableTwoStyles } from './tableStyle.jsx';
 
 function TrendingData() {
+    const navigate = useNavigate();
     const [stockData, setStockData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const stockNames = ["NVDA", "GOOGL", "META", "LLY", "TSLA", "AVGO", "V", "JPM", "UNH", "MA", "HD", "AMZN", "XOM"];
@@ -57,21 +62,47 @@ function TrendingData() {
         }
     ];
 
+    const handleRowClick = (row) => {
+        navigate(`/stockexaminer/${row.name}`);
+    };
+
+    const handleItemClick = (item) => {
+        navigate(`/stockexaminer/${item.name}`);
+    };
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
 
     const { gains, losses } = formattedData();
 
+    const stockList = stockNames.map((name, index) => ({
+        id: index + 1,
+        name: name
+    }));
+
     return (
-        <div className='container mt-5'>
-            <h2>Biggest Gainers</h2>
-            <DataTable columns={columns} data={gains} />
-            <h2>Biggest Losers</h2>
-            <DataTable columns={columns} data={losses} />
+        <div className ="trending-stocks-body">
+        <div className='container-mt-5'>
+            <h2>All Stocks</h2>
+             <div className="clickable-list">
+                <ul>
+                    {stockList.map(item => (
+                    <li key={item.id} onClick={() => handleItemClick(item)}>
+                        {item.name}
+                    </li>
+                    ))}
+                </ul>
+            </div>
+            <div className='dataTable'>
+            <h2>Biggest Gains</h2>
+            <DataTable columns={columns} data={gains} onRowClicked={handleRowClick} customStyles={tableOneStyles}/>
+            <h2>Biggest Losses</h2>
+            <DataTable columns={columns} data={losses} onRowClicked={handleRowClick} customStyles={tableTwoStyles}/>
+            </div>
+        </div>
         </div>
     );   
 }
 
 export default TrendingData;
-
