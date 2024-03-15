@@ -259,8 +259,9 @@ if __name__ == "__main__":
         print("All updates complete.")
         exit(0)
 
-    print("Starting updating task...")
-    subprocess.run("python3 autoupdate.py", shell=True)
+    if '--autoupdate' in args:
+        print("Starting updating task...")
+        subprocess.run("python3 autoupdate.py", shell=True)
 
     print("Starting server...")
     app.run(host="127.0.0.1", port=8080)
